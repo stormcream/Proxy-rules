@@ -1,14 +1,18 @@
 {
-    "version": 2,
+    "version": 3,
     "rules": [
         {
+            "ip_cidr": [],
+            "domain": [],
+            "domain_keyword": [],
             "domain_suffix": [
                 "xmsl.org",
                 "cn2gias.uk",
                 "as174.de",
                 "bili.rip",
                 "ip-api.com"
-            ]
+            ],
+            "domain_regex": []
         }
     ]
 }
