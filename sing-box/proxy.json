@@ -1,0 +1,12 @@
+{
+  "version": 3,
+  "rules": [
+    {
+      "ip_cidr": [],
+      "domain": [],
+      "domain_keyword": [],
+      "domain_suffix": ["tampermonkey.net.cn"],
+      "domain_regex": []
+    }
+  ]
+}
