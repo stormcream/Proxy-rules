@@ -1,12 +1,7 @@
 {
     "experimental": {
         "clash_api": {
-            "external_controller": "0.0.0.0:9090",
-            "external_ui": "ui",
-            "secret": "",
-            "external_ui_download_url": "https://github.com/Zephyruso/zashboard/releases/latest/download/dist.zip",
-            "external_ui_download_detour": "AUTO",
-            "default_mode": "rule"
+            "external_controller": "0.0.0.0:9090"
         },
         "cache_file": {
             "enabled": true,
@@ -19,11 +14,15 @@
             "listen": "0.0.0.0",
             "listen_port": 9091,
             "secret": "",
-            "access_control_allow_origin": [
-                "http://sing-box-dashboard.sagernet.org",
-                "https://sing-box-dashboard.sagernet.org"
-            ],
-            "access_control_allow_private_network": false
+            "access_control_allow_origin": [],
+            "access_control_allow_private_network": true,
+            "dashboard": {
+                "enabled": true,
+                "path": "/etc/sing-box/dashboard",
+                "download_url": "https://github.com/SagerNet/sing-box-dashboard/archive/refs/heads/gh-pages.zip",
+                "http_client": "hc_proxy",
+                "update_interval": "4h"
+            }
         }
     ],
     "log": {
@@ -60,7 +59,7 @@
             },
             {
                 "tag": "dns_direct",
-                "type": "h3",
+                "type": "https",
                 "server": "dns.alidns.com",
                 "domain_resolver": {
                     "server": "hosts"
@@ -83,16 +82,17 @@
         ],
         "rules": [
             {
-                "clash_mode": "direct",
+                "clash_mode": "Direct",
                 "server": "dns_direct"
             },
             {
-                "clash_mode": "global",
+                "clash_mode": "Global",
                 "server": "dns_proxy"
             },
             {
                 "rule_set": "geosite-ads",
-                "action": "reject"
+                "action": "predefined",
+                "rcode": "NXDOMAIN"
             },
             {
                 "rule_set": [
@@ -124,7 +124,8 @@
             }
         ],
         "final": "dns_proxy",
-        "strategy": "ipv4_only"
+        "strategy": "ipv4_only",
+        "cache_capacity": 4096
     },
     "inbounds": [
         {
@@ -158,16 +159,17 @@
             "listen_port": 7891
         },
         {
-            "tag": "tun-in",
             "type": "tun",
+            "tag": "tun-in",
             "address": [
-                "172.18.0.1/30"
+                "172.19.0.1/30"
             ],
             "auto_route": true,
             "auto_redirect": true,
             "strict_route": true,
-            "stack": "mixed",
             "dns_mode": "hijack",
+            "stack": "mixed",
+            "endpoint_independent_nat": true,
             "udp_timeout": "5m"
         }
     ],
@@ -182,7 +184,7 @@
             "type": "urltest",
             "outbounds": [],
             "url": "http://www.gstatic.com/generate_204",
-            "interval": "60s",
+            "interval": "180s",
             "tolerance": 100,
             "interrupt_exist_connections": false,
             "idle_timeout": "30m"
@@ -229,7 +231,7 @@
                 "DIRECT"
             ],
             "url": "http://www.gstatic.com/generate_204",
-            "interval": "60s",
+            "interval": "180s",
             "tolerance": 100,
             "interrupt_exist_connections": false,
             "idle_timeout": "30m"
@@ -271,7 +273,7 @@
                 "HK-SELECT"
             ],
             "url": "http://www.gstatic.com/generate_204",
-            "interval": "60s",
+            "interval": "180s",
             "tolerance": 100,
             "interrupt_exist_connections": false,
             "idle_timeout": "30m"
@@ -283,7 +285,7 @@
                 "TW-SELECT"
             ],
             "url": "http://www.gstatic.com/generate_204",
-            "interval": "60s",
+            "interval": "180s",
             "tolerance": 100,
             "interrupt_exist_connections": false,
             "idle_timeout": "30m"
@@ -295,7 +297,7 @@
                 "JP-SELECT"
             ],
             "url": "http://www.gstatic.com/generate_204",
-            "interval": "60s",
+            "interval": "180s",
             "tolerance": 100,
             "interrupt_exist_connections": false,
             "idle_timeout": "30m"
@@ -307,7 +309,7 @@
                 "SG-SELECT"
             ],
             "url": "http://www.gstatic.com/generate_204",
-            "interval": "60s",
+            "interval": "180s",
             "tolerance": 100,
             "interrupt_exist_connections": false,
             "idle_timeout": "30m"
@@ -319,7 +321,7 @@
                 "US-SELECT"
             ],
             "url": "http://www.gstatic.com/generate_204",
-            "interval": "60s",
+            "interval": "180s",
             "tolerance": 100,
             "interrupt_exist_connections": false,
             "idle_timeout": "30m"
@@ -331,7 +333,7 @@
                 "RD-SELECT"
             ],
             "url": "http://www.gstatic.com/generate_204",
-            "interval": "60s",
+            "interval": "180s",
             "tolerance": 100,
             "interrupt_exist_connections": false,
             "idle_timeout": "30m"
@@ -385,11 +387,11 @@
                 "method": "drop"
             },
             {
-                "clash_mode": "direct",
+                "clash_mode": "Direct",
                 "outbound": "DIRECT"
             },
             {
-                "clash_mode": "global",
+                "clash_mode": "Global",
                 "outbound": "GLOBAL"
             },
             {
