@@ -465,10 +465,6 @@
                 "outbound": "STREAMING"
             },
             {
-                "rule_set": "site-proxy-dustinwin",
-                "outbound": "PROXY"
-            },
-            {
                 "rule_set": "site-bilibili",
                 "outbound": "DIRECT"
             },
@@ -479,6 +475,10 @@
             {
                 "rule_set": "site-microsoft",
                 "outbound": "DIRECT"
+            },
+            {
+                "rule_set": "site-proxy-dustinwin",
+                "outbound": "PROXY"
             },
             {
                 "rule_set": [
