@@ -20,8 +20,7 @@
                 "enabled": true,
                 "path": "/etc/sing-box/dashboard",
                 "download_url": "https://github.com/SagerNet/sing-box-dashboard/archive/refs/heads/gh-pages.zip",
-                "http_client": "hc_proxy",
-                "update_interval": "4h"
+                "http_client": "hc_proxy"
             }
         }
     ],
@@ -90,35 +89,45 @@
                 "server": "dns_proxy"
             },
             {
-                "rule_set": "geosite-ads",
+                "rule_set": "site-ads",
                 "action": "predefined",
                 "rcode": "NXDOMAIN"
             },
             {
                 "rule_set": [
-                    "emby-site",
-                    "proxy-site",
-                    "geosite-twitch",
-                    "geosite-netflix",
-                    "geosite-openai",
-                    "geosite-youtube",
-                    "geosite-google",
-                    "geosite-github",
-                    "geosite-telegram",
-                    "geosite-twitter",
-                    "geosite-facebook",
-                    "geosite-tiktok",
-                    "geosite-proxy"
+                    "site-ai",
+                    "site-youtube",
+                    "site-google",
+                    "site-github",
+                    "site-telegram",
+                    "site-x",
+                    "site-facebook",
+                    "site-twitch",
+                    "site-tiktok",
+                    "site-netflix"
                 ],
                 "server": "dns_proxy"
             },
             {
                 "rule_set": [
-                    "direct-site",
-                    "geosite-bilibili",
-                    "geosite-apple-cn",
-                    "geosite-microsoft-cn",
-                    "geosite-direct"
+                    "site-bilibili",
+                    "site-apple",
+                    "site-microsoft"
+                ],
+                "server": "dns_direct"
+            },
+            {
+                "rule_set": [
+                    "site-emby",
+                    "site-proxy",
+                    "site-proxy-dustinwin"
+                ],
+                "server": "dns_proxy"
+            },
+            {
+                "rule_set": [
+                    "site-direct",
+                    "site-direct-dustinwin"
                 ],
                 "server": "dns_direct"
             }
@@ -185,7 +194,7 @@
             "outbounds": [],
             "url": "http://www.gstatic.com/generate_204",
             "interval": "180s",
-            "tolerance": 100,
+            "tolerance": 150,
             "interrupt_exist_connections": false,
             "idle_timeout": "30m"
         },
@@ -232,7 +241,7 @@
             ],
             "url": "http://www.gstatic.com/generate_204",
             "interval": "180s",
-            "tolerance": 100,
+            "tolerance": 150,
             "interrupt_exist_connections": false,
             "idle_timeout": "30m"
         },
@@ -274,7 +283,7 @@
             ],
             "url": "http://www.gstatic.com/generate_204",
             "interval": "180s",
-            "tolerance": 100,
+            "tolerance": 150,
             "interrupt_exist_connections": false,
             "idle_timeout": "30m"
         },
@@ -286,7 +295,7 @@
             ],
             "url": "http://www.gstatic.com/generate_204",
             "interval": "180s",
-            "tolerance": 100,
+            "tolerance": 150,
             "interrupt_exist_connections": false,
             "idle_timeout": "30m"
         },
@@ -298,7 +307,7 @@
             ],
             "url": "http://www.gstatic.com/generate_204",
             "interval": "180s",
-            "tolerance": 100,
+            "tolerance": 150,
             "interrupt_exist_connections": false,
             "idle_timeout": "30m"
         },
@@ -310,7 +319,7 @@
             ],
             "url": "http://www.gstatic.com/generate_204",
             "interval": "180s",
-            "tolerance": 100,
+            "tolerance": 150,
             "interrupt_exist_connections": false,
             "idle_timeout": "30m"
         },
@@ -322,7 +331,7 @@
             ],
             "url": "http://www.gstatic.com/generate_204",
             "interval": "180s",
-            "tolerance": 100,
+            "tolerance": 150,
             "interrupt_exist_connections": false,
             "idle_timeout": "30m"
         },
@@ -334,7 +343,7 @@
             ],
             "url": "http://www.gstatic.com/generate_204",
             "interval": "180s",
-            "tolerance": 100,
+            "tolerance": 150,
             "interrupt_exist_connections": false,
             "idle_timeout": "30m"
         },
@@ -383,8 +392,7 @@
                         "protocol": "stun"
                     }
                 ],
-                "action": "reject",
-                "method": "drop"
+                "action": "reject"
             },
             {
                 "clash_mode": "Direct",
@@ -395,281 +403,223 @@
                 "outbound": "GLOBAL"
             },
             {
-                "rule_set": "geosite-ads",
+                "rule_set": "site-ads",
                 "action": "reject"
             },
             {
-                "rule_set": "proxy-site",
+                "rule_set": "site-proxy",
                 "outbound": "PROXY"
             },
             {
-                "rule_set": "emby-site",
+                "rule_set": "site-emby",
                 "outbound": "EMBY"
             },
             {
-                "rule_set": "direct-site",
+                "rule_set": "site-direct",
                 "outbound": "DIRECT"
             },
             {
-                "rule_set": "geosite-openai",
+                "rule_set": "site-ai",
                 "outbound": "PROXY"
             },
             {
-                "rule_set": "geosite-youtube",
+                "rule_set": "site-youtube",
                 "outbound": "STREAMING"
             },
             {
-                "rule_set": "geosite-google",
+                "rule_set": "site-google",
                 "outbound": "PROXY"
             },
             {
-                "rule_set": "geosite-github",
+                "rule_set": "site-github",
                 "outbound": "PROXY"
             },
             {
-                "rule_set": "geosite-telegram",
+                "rule_set": [
+                    "site-telegram",
+                    "ip-telegram-dustinwin"
+                ],
                 "outbound": "SOCIAL"
             },
             {
-                "rule_set": "geosite-twitter",
+                "rule_set": "site-x",
                 "outbound": "SOCIAL"
             },
             {
-                "rule_set": "geosite-facebook",
+                "rule_set": "site-facebook",
                 "outbound": "SOCIAL"
             },
             {
-                "rule_set": "geosite-twitch",
+                "rule_set": "site-twitch",
                 "outbound": "STREAMING"
             },
             {
-                "rule_set": "geosite-tiktok",
+                "rule_set": "site-tiktok",
                 "outbound": "STREAMING"
             },
             {
-                "rule_set": "geosite-netflix",
+                "rule_set": [
+                    "site-netflix",
+                    "ip-netflix-dustinwin"
+                ],
                 "outbound": "STREAMING"
             },
             {
-                "rule_set": "geoip-google",
+                "rule_set": "site-proxy-dustinwin",
                 "outbound": "PROXY"
             },
             {
-                "rule_set": "geoip-telegram",
-                "outbound": "SOCIAL"
-            },
-            {
-                "rule_set": "geoip-twitter",
-                "outbound": "SOCIAL"
-            },
-            {
-                "rule_set": "geoip-facebook",
-                "outbound": "SOCIAL"
-            },
-            {
-                "rule_set": "geoip-netflix",
-                "outbound": "STREAMING"
-            },
-            {
-                "rule_set": "geosite-proxy",
-                "outbound": "PROXY"
-            },
-            {
-                "rule_set": "geosite-bilibili",
+                "rule_set": "site-bilibili",
                 "outbound": "DIRECT"
             },
             {
-                "rule_set": "geosite-apple-cn",
+                "rule_set": "site-apple",
                 "outbound": "DIRECT"
             },
             {
-                "rule_set": "geosite-microsoft-cn",
+                "rule_set": "site-microsoft",
                 "outbound": "DIRECT"
             },
             {
-                "rule_set": "geosite-direct",
-                "outbound": "DIRECT"
-            },
-            {
-                "rule_set": "geoip-cn",
+                "rule_set": [
+                    "site-direct-dustinwin",
+                    "ip-cn-dustinwin"
+                ],
                 "outbound": "DIRECT"
             }
         ],
         "rule_set": [
             {
                 "type": "remote",
-                "tag": "geosite-ads",
+                "tag": "site-ads",
                 "format": "binary",
-                "url": "https://raw.githubusercontent.com/217heidai/adblockfilters/main/rules/adblocksingbox.srs",
-                "update_interval": "4h"
+                "url": "https://raw.githubusercontent.com/217heidai/adblockfilters/main/rules/adblocksingbox.srs"
             },
             {
-                "tag": "emby-site",
+                "tag": "site-emby",
                 "type": "remote",
                 "format": "source",
-                "url": "https://raw.githubusercontent.com/stormcream/Proxy-rules/refs/heads/main/sing-box/emby.json",
-                "update_interval": "4h"
+                "url": "https://raw.githubusercontent.com/stormcream/Proxy-rules/refs/heads/main/sing-box/emby.json"
             },
             {
-                "tag": "proxy-site",
+                "tag": "site-proxy",
                 "type": "remote",
                 "format": "source",
-                "url": "https://raw.githubusercontent.com/stormcream/Proxy-rules/refs/heads/main/sing-box/proxy.json",
-                "update_interval": "4h"
+                "url": "https://raw.githubusercontent.com/stormcream/Proxy-rules/refs/heads/main/sing-box/proxy.json"
             },
             {
-                "tag": "direct-site",
+                "tag": "site-direct",
                 "type": "remote",
                 "format": "source",
-                "url": "https://raw.githubusercontent.com/stormcream/Proxy-rules/refs/heads/main/sing-box/direct.json",
-                "update_interval": "4h"
+                "url": "https://raw.githubusercontent.com/stormcream/Proxy-rules/refs/heads/main/sing-box/direct.json"
             },
             {
-                "tag": "geosite-openai",
+                "tag": "site-ai",
                 "type": "remote",
                 "format": "binary",
-                "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/ai.srs",
-                "update_interval": "4h"
+                "url": "https://github.com/SagerNet/sing-geosite/raw/refs/heads/rule-set/geosite-category-ai-!cn.srs"
             },
             {
-                "tag": "geosite-youtube",
+                "tag": "site-youtube",
                 "type": "remote",
                 "format": "binary",
-                "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/youtube.srs",
-                "update_interval": "4h"
+                "url": "https://github.com/SagerNet/sing-geosite/raw/refs/heads/rule-set/geosite-youtube.srs"
             },
             {
-                "tag": "geoip-google",
+                "tag": "site-google",
                 "type": "remote",
                 "format": "binary",
-                "url": "https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/sing/geo/geoip/google.srs",
-                "update_interval": "4h"
+                "url": "https://github.com/SagerNet/sing-geosite/raw/refs/heads/rule-set/geosite-google.srs"
             },
             {
-                "tag": "geosite-google",
+                "tag": "site-github",
                 "type": "remote",
                 "format": "binary",
-                "url": "https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/sing/geo/geosite/google.srs",
-                "update_interval": "4h"
+                "url": "https://github.com/SagerNet/sing-geosite/raw/refs/heads/rule-set/geosite-github.srs"
             },
             {
-                "tag": "geosite-github",
+                "tag": "site-telegram",
                 "type": "remote",
                 "format": "binary",
-                "url": "https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/sing/geo/geosite/github.srs",
-                "update_interval": "4h"
+                "url": "https://github.com/SagerNet/sing-geosite/raw/refs/heads/rule-set/geosite-telegram.srs"
             },
             {
-                "tag": "geoip-telegram",
+                "tag": "site-x",
                 "type": "remote",
                 "format": "binary",
-                "url": "https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/sing/geo/geoip/telegram.srs",
-                "update_interval": "4h"
+                "url": "https://github.com/SagerNet/sing-geosite/raw/refs/heads/rule-set/geosite-x.srs"
             },
             {
-                "tag": "geosite-telegram",
+                "tag": "site-facebook",
                 "type": "remote",
                 "format": "binary",
-                "url": "https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/sing/geo/geosite/telegram.srs",
-                "update_interval": "4h"
+                "url": "https://github.com/SagerNet/sing-geosite/raw/refs/heads/rule-set/geosite-facebook.srs"
             },
             {
-                "tag": "geoip-twitter",
+                "tag": "site-bilibili",
                 "type": "remote",
                 "format": "binary",
-                "url": "https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/sing/geo/geoip/twitter.srs",
-                "update_interval": "4h"
+                "url": "https://github.com/SagerNet/sing-geosite/raw/refs/heads/rule-set/geosite-bilibili.srs"
             },
             {
-                "tag": "geosite-twitter",
+                "tag": "site-twitch",
                 "type": "remote",
                 "format": "binary",
-                "url": "https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/sing/geo/geosite/twitter.srs",
-                "update_interval": "4h"
+                "url": "https://github.com/SagerNet/sing-geosite/raw/refs/heads/rule-set/geosite-twitch.srs"
             },
             {
-                "tag": "geoip-facebook",
+                "tag": "site-tiktok",
                 "type": "remote",
                 "format": "binary",
-                "url": "https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/sing/geo/geoip/facebook.srs",
-                "update_interval": "4h"
+                "url": "https://github.com/SagerNet/sing-geosite/raw/refs/heads/rule-set/geosite-tiktok.srs"
             },
             {
-                "tag": "geosite-facebook",
+                "tag": "site-netflix",
                 "type": "remote",
                 "format": "binary",
-                "url": "https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/sing/geo/geosite/facebook.srs",
-                "update_interval": "4h"
+                "url": "https://github.com/SagerNet/sing-geosite/raw/refs/heads/rule-set/geosite-netflix.srs"
             },
             {
-                "tag": "geosite-bilibili",
+                "tag": "site-apple",
                 "type": "remote",
                 "format": "binary",
-                "url": "https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/sing/geo/geosite/bilibili.srs",
-                "update_interval": "4h"
+                "url": "https://github.com/SagerNet/sing-geosite/raw/refs/heads/rule-set/geosite-apple.srs"
             },
             {
-                "tag": "geosite-twitch",
+                "tag": "site-microsoft",
                 "type": "remote",
                 "format": "binary",
-                "url": "https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/sing/geo/geosite/twitch.srs",
-                "update_interval": "4h"
+                "url": "https://github.com/SagerNet/sing-geosite/raw/refs/heads/rule-set/geosite-microsoft.srs"
             },
             {
-                "tag": "geosite-tiktok",
+                "tag": "site-proxy-dustinwin",
                 "type": "remote",
                 "format": "binary",
-                "url": "https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/sing/geo/geosite/tiktok.srs",
-                "update_interval": "4h"
+                "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/proxy.srs"
             },
             {
-                "tag": "geosite-netflix",
+                "tag": "site-direct-dustinwin",
                 "type": "remote",
                 "format": "binary",
-                "url": "https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/sing/geo/geosite/netflix.srs",
-                "update_interval": "4h"
+                "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/cn.srs"
             },
             {
-                "tag": "geoip-netflix",
+                "tag": "ip-telegram-dustinwin",
                 "type": "remote",
                 "format": "binary",
-                "url": "https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/sing/geo/geoip/netflix.srs",
-                "update_interval": "4h"
+                "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/telegramip.srs"
             },
             {
-                "tag": "geosite-apple-cn",
+                "tag": "ip-netflix-dustinwin",
                 "type": "remote",
                 "format": "binary",
-                "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/apple-cn.srs",
-                "update_interval": "4h"
+                "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/netflixip.srs"
             },
             {
-                "tag": "geosite-microsoft-cn",
+                "tag": "ip-cn-dustinwin",
                 "type": "remote",
                 "format": "binary",
-                "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/microsoft-cn.srs",
-                "update_interval": "4h"
-            },
-            {
-                "tag": "geosite-proxy",
-                "type": "remote",
-                "format": "binary",
-                "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/proxy.srs",
-                "update_interval": "4h"
-            },
-            {
-                "tag": "geoip-cn",
-                "type": "remote",
-                "format": "binary",
-                "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/cnip.srs",
-                "update_interval": "4h"
-            },
-            {
-                "tag": "geosite-direct",
-                "type": "remote",
-                "format": "binary",
-                "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/cn-lite.srs",
-                "update_interval": "4h"
+                "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/cnip.srs"
             }
         ]
     }
