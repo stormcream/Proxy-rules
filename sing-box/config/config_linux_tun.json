@@ -95,6 +95,17 @@
             },
             {
                 "rule_set": [
+                    "site-emby-self",
+                    "site-proxy-self"
+                ],
+                "server": "dns_proxy"
+            },
+            {
+                "rule_set": "site-direct-self",
+                "server": "dns_direct"
+            },
+            {
+                "rule_set": [
                     "site-ai",
                     "site-youtube",
                     "site-google",
@@ -117,18 +128,11 @@
                 "server": "dns_direct"
             },
             {
-                "rule_set": [
-                    "site-emby",
-                    "site-proxy",
-                    "site-proxy-dustinwin"
-                ],
+                "rule_set": "site-proxy",
                 "server": "dns_proxy"
             },
             {
-                "rule_set": [
-                    "site-direct",
-                    "site-direct-dustinwin"
-                ],
+                "rule_set": "site-direct",
                 "server": "dns_direct"
             }
         ],
@@ -353,7 +357,7 @@
         }
     ],
     "route": {
-        "final": "PROXY",
+        "final": "FINAL",
         "auto_detect_interface": true,
         "default_domain_resolver": "dns_direct",
         "default_http_client": "hc_proxy",
@@ -407,15 +411,15 @@
                 "action": "reject"
             },
             {
-                "rule_set": "site-proxy",
+                "rule_set": "site-proxy-self",
                 "outbound": "PROXY"
             },
             {
-                "rule_set": "site-emby",
+                "rule_set": "site-emby-self",
                 "outbound": "EMBY"
             },
             {
-                "rule_set": "site-direct",
+                "rule_set": "site-direct-self",
                 "outbound": "DIRECT"
             },
             {
@@ -437,7 +441,7 @@
             {
                 "rule_set": [
                     "site-telegram",
-                    "ip-telegram-dustinwin"
+                    "ip-telegram"
                 ],
                 "outbound": "SOCIAL"
             },
@@ -460,7 +464,7 @@
             {
                 "rule_set": [
                     "site-netflix",
-                    "ip-netflix-dustinwin"
+                    "ip-netflix"
                 ],
                 "outbound": "STREAMING"
             },
@@ -477,13 +481,13 @@
                 "outbound": "DIRECT"
             },
             {
-                "rule_set": "site-proxy-dustinwin",
+                "rule_set": "site-proxy",
                 "outbound": "PROXY"
             },
             {
                 "rule_set": [
-                    "site-direct-dustinwin",
-                    "ip-cn-dustinwin"
+                    "site-direct",
+                    "ip-cn"
                 ],
                 "outbound": "DIRECT"
             }
@@ -496,19 +500,19 @@
                 "url": "https://raw.githubusercontent.com/217heidai/adblockfilters/main/rules/adblocksingbox.srs"
             },
             {
-                "tag": "site-emby",
+                "tag": "site-emby-self",
                 "type": "remote",
                 "format": "source",
                 "url": "https://raw.githubusercontent.com/stormcream/Proxy-rules/refs/heads/main/sing-box/emby.json"
             },
             {
-                "tag": "site-proxy",
+                "tag": "site-proxy-self",
                 "type": "remote",
                 "format": "source",
                 "url": "https://raw.githubusercontent.com/stormcream/Proxy-rules/refs/heads/main/sing-box/proxy.json"
             },
             {
-                "tag": "site-direct",
+                "tag": "site-direct-self",
                 "type": "remote",
                 "format": "source",
                 "url": "https://raw.githubusercontent.com/stormcream/Proxy-rules/refs/heads/main/sing-box/direct.json"
@@ -592,31 +596,31 @@
                 "url": "https://github.com/SagerNet/sing-geosite/raw/refs/heads/rule-set/geosite-microsoft.srs"
             },
             {
-                "tag": "site-proxy-dustinwin",
+                "tag": "site-proxy",
                 "type": "remote",
                 "format": "binary",
                 "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/proxy.srs"
             },
             {
-                "tag": "site-direct-dustinwin",
+                "tag": "site-direct",
                 "type": "remote",
                 "format": "binary",
                 "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/cn.srs"
             },
             {
-                "tag": "ip-telegram-dustinwin",
+                "tag": "ip-telegram",
                 "type": "remote",
                 "format": "binary",
                 "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/telegramip.srs"
             },
             {
-                "tag": "ip-netflix-dustinwin",
+                "tag": "ip-netflix",
                 "type": "remote",
                 "format": "binary",
                 "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/netflixip.srs"
             },
             {
-                "tag": "ip-cn-dustinwin",
+                "tag": "ip-cn",
                 "type": "remote",
                 "format": "binary",
                 "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/cnip.srs"
