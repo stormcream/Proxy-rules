@@ -20,7 +20,7 @@
                 "enabled": true,
                 "path": "/etc/sing-box/dashboard",
                 "download_url": "https://github.com/SagerNet/sing-box-dashboard/archive/refs/heads/gh-pages.zip",
-                "http_client": "hc_proxy"
+                "http_client": "http_client_proxy"
             }
         }
     ],
@@ -29,7 +29,7 @@
         "timestamp": true
     },
     "ntp": {
-        "enabled": true,
+        "enabled": false,
         "server": "ntp.tencent.com",
         "server_port": 123,
         "interval": "30m",
@@ -37,11 +37,11 @@
     },
     "http_clients": [
         {
-            "tag": "hc_direct",
+            "tag": "http_client_direct",
             "detour": "DIRECT"
         },
         {
-            "tag": "hc_proxy",
+            "tag": "http_client_proxy",
             "detour": "AUTO"
         }
     ],
@@ -51,18 +51,20 @@
                 "tag": "dns_proxy",
                 "type": "https",
                 "server": "dns.google",
-                "domain_resolver": {
-                    "server": "hosts"
-                },
+                "domain_resolver": "hosts",
                 "detour": "DNS"
             },
             {
                 "tag": "dns_direct",
                 "type": "https",
                 "server": "dns.alidns.com",
-                "domain_resolver": {
-                    "server": "hosts"
-                }
+                "domain_resolver": "hosts"
+            },
+            {
+                "tag": "dns_bootstrap",
+                "type": "https",
+                "server": "doh.pub",
+                "domain_resolver": "hosts"
             },
             {
                 "type": "hosts",
@@ -75,6 +77,10 @@
                     "dns.alidns.com": [
                         "223.5.5.5",
                         "223.6.6.6"
+                    ],
+                    "doh.pub": [
+                        "120.53.53.53",
+                        "1.12.12.12"
                     ]
                 }
             }
@@ -181,9 +187,7 @@
             "auto_redirect": true,
             "strict_route": true,
             "dns_mode": "hijack",
-            "stack": "mixed",
-            "endpoint_independent_nat": true,
-            "udp_timeout": "5m"
+            "stack": "mixed"
         }
     ],
     "outbounds": [
@@ -359,8 +363,8 @@
     "route": {
         "final": "FINAL",
         "auto_detect_interface": true,
-        "default_domain_resolver": "dns_direct",
-        "default_http_client": "hc_proxy",
+        "default_domain_resolver": "dns_bootstrap",
+        "default_http_client": "http_client_proxy",
         "rules": [
             {
                 "inbound": [
