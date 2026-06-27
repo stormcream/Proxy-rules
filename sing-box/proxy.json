@@ -5,7 +5,10 @@
       "ip_cidr": [],
       "domain": [],
       "domain_keyword": [],
-      "domain_suffix": ["tampermonkey.net.cn"],
+      "domain_suffix": [
+          "tampermonkey.net.cn",
+          "vanse.top"
+      ],
       "domain_regex": []
     }
   ]
