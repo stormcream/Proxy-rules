@@ -21,12 +21,12 @@ config.outbounds.push(...proxies)
 const relay_tag = "RELAY"
 
 const self_tags = {
-    HK: ['HK-SELECT', 'HK-AUTO'],
-    TW: ['TW-SELECT', 'TW-AUTO'],
-    JP: ['JP-SELECT', 'JP-AUTO'],
-    SG: ['SG-SELECT', 'SG-AUTO'],
-    US: ['US-SELECT', 'US-AUTO'],
-    RD: ['RD-SELECT', 'RD-AUTO']
+    HK: ['S-HK', 'A-HK'],
+    TW: ['S-TW', 'A-TW'],
+    JP: ['S-JP', 'A-JP'],
+    SG: ['S-SG', 'A-SG'],
+    US: ['S-US', 'A-US'],
+    RD: ['S-RD', 'A-RD']
 }
 
 
@@ -38,7 +38,8 @@ const groups = {
     SG: [],
     US: [],
     RD: [],
-    LD: []
+    LD: [],
+    ALL: []
 }
 
 // ===== 规则（建议顺序：更“唯一”的优先）=====
@@ -48,7 +49,7 @@ const rules = {
     JP: /(日本|jp|japan|🇯🇵)/i,
     SG: /(新加坡|singapore|\bsg\b|🇸🇬)/i,
     US: /(美国|united\s?states|\bus\b|🇺🇸)/i,
-    LD: /(落地)/i
+    LD: /(Z#)/i
 }
 
 // ===== 核心：唯一归属 =====
@@ -72,6 +73,8 @@ for (const p of proxies) {
         // 👇 只有没命中任何地区才会进 RD
         groups.RD.push(tag)
     }
+    // 👇 所有节点都归入 ALL
+    groups.ALL.push(tag)
 }
 
 // ===== 写入 =====
@@ -79,17 +82,17 @@ config.outbounds.forEach(i => {
 
     if (i.outbounds) {
 
-        if (i.tag === "HK-SELECT" || i.tag === "HK-AUTO") {
+        if (i.tag === "S-HK" || i.tag === "A-HK") {
             i.outbounds.push(...groups.HK)
-        } else if (i.tag === "TW-SELECT" || i.tag === "TW-AUTO") {
+        } else if (i.tag === "S-TW" || i.tag === "A-TW") {
             i.outbounds.push(...groups.TW)
-        } else if (i.tag === "JP-SELECT" || i.tag === "JP-AUTO") {
+        } else if (i.tag === "S-JP" || i.tag === "A-JP") {
             i.outbounds.push(...groups.JP)
-        } else if (i.tag === "SG-SELECT" || i.tag === "SG-AUTO") {
+        } else if (i.tag === "S-SG" || i.tag === "A-SG") {
             i.outbounds.push(...groups.SG)
-        } else if (i.tag === "US-SELECT" || i.tag === "US-AUTO") {
+        } else if (i.tag === "S-US" || i.tag === "A-US") {
             i.outbounds.push(...groups.US)
-        } else if (i.tag === "RD-SELECT" || i.tag === "RD-AUTO") {
+        } else if (i.tag === "S-RD" || i.tag === "A-RD") {
             i.outbounds.push(...groups.RD)
         } else if (i.tag === relay_tag) {
             i.outbounds.push(
@@ -100,7 +103,8 @@ config.outbounds.forEach(i => {
                 ...self_tags.US,
                 ...self_tags.RD
             )
-            i.default = "SG-AUTO"
+            i.outbounds.sort((a, b) => a.localeCompare(b))
+            i.default = "A-SG"
         } else if (i.tag === "PROXY") {
             i.outbounds.push(
                 ...self_tags.HK,
@@ -111,11 +115,13 @@ config.outbounds.forEach(i => {
                 ...self_tags.RD,
                 ...groups.LD
             )
-            i.default = "SG-AUTO"
-        } else if (i.tag === "AUTO-TEST") {
+            i.outbounds.sort((a, b) => a.localeCompare(b))
+            i.default = "A-SG"
+        } else if (i.tag === "AUTO-TESTING") {
             i.outbounds.push(
                 ...groups.LD
             )
+            i.outbounds.sort((a, b) => a.localeCompare(b))
         } else if (i.tag === "DNS") {
             i.outbounds.push(
                 "PROXY",
@@ -127,8 +133,19 @@ config.outbounds.forEach(i => {
                 ...self_tags.RD,
                 ...groups.LD
             )
-            i.default = "SG-AUTO"
-        } else {
+            i.outbounds.sort((a, b) => a.localeCompare(b))
+            i.default = "PROXY"
+        } else if (i.tag === "AUTO-SELECT") {
+            i.outbounds.push(
+                self_tags.HK[1],
+                self_tags.TW[1],
+                self_tags.SG[1],
+                self_tags.JP[1],
+                self_tags.US[1],
+                self_tags.RD[1]
+            )
+            i.outbounds.sort((a, b) => a.localeCompare(b))
+        } else if (i.tag === "EMBY") {
             i.outbounds.push(
                 "PROXY",
                 "DIRECT",
@@ -140,6 +157,14 @@ config.outbounds.forEach(i => {
                 ...self_tags.RD,
                 ...groups.LD
             )
+           i.outbounds.sort((a, b) => a.localeCompare(b))
+           i.default = "PROXY"
+        } else {
+            i.outbounds.push(
+                "PROXY",
+                "DIRECT"
+            )
+            i.default = "PROXY"
         }
     }
 
