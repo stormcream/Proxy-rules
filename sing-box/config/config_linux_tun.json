@@ -1,56 +1,14 @@
 {
-    "experimental": {
-        "clash_api": {
-            "external_controller": "0.0.0.0:9090"
-        },
-        "cache_file": {
-            "enabled": true,
-            "store_dns": true
-        }
-    },
-    "services": [
-        {
-            "type": "api",
-            "listen": "0.0.0.0",
-            "listen_port": 9091,
-            "secret": "",
-            "access_control_allow_origin": [],
-            "access_control_allow_private_network": true,
-            "dashboard": {
-                "enabled": true,
-                "path": "/etc/sing-box/dashboard",
-                "download_url": "https://github.com/SagerNet/sing-box-dashboard/archive/refs/heads/gh-pages.zip",
-                "http_client": "http_client_proxy"
-            }
-        }
-    ],
     "log": {
         "level": "info",
         "timestamp": true
     },
-    "ntp": {
-        "enabled": true,
-        "server": "ntp.tencent.com",
-        "server_port": 123,
-        "interval": "30m",
-        "domain_resolver": "dns_server_bootstrap"
-    },
-    "http_clients": [
-        {
-            "tag": "http_client_direct",
-            "detour": "DIRECT"
-        },
-        {
-            "tag": "http_client_proxy",
-            "detour": "AUTO-SELECT"
-        }
-    ],
     "dns": {
         "servers": [
             {
                 "tag": "dns_server_proxy",
                 "type": "https",
-                "server": "dns.google",
+                "server": "cloudflare-dns.com",
                 "domain_resolver": "dns_server_hosts",
                 "detour": "DNS"
             },
@@ -70,9 +28,9 @@
                 "tag": "dns_server_hosts",
                 "type": "hosts",
                 "predefined": {
-                    "dns.google": [
-                        "8.8.8.8",
-                        "8.8.4.4"
+                    "cloudflare-dns.com": [
+                        "1.1.1.1",
+                        "1.0.0.1"
                     ],
                     "dns.alidns.com": [
                         "223.5.5.5",
@@ -86,14 +44,6 @@
             }
         ],
         "rules": [
-            {
-                "clash_mode": "Direct",
-                "server": "dns_server_direct"
-            },
-            {
-                "clash_mode": "Global",
-                "server": "dns_server_proxy"
-            },
             {
                 "rule_set": "site-ads",
                 "action": "reject"
@@ -145,6 +95,26 @@
         "strategy": "ipv4_only",
         "cache_capacity": 4096
     },
+    "ntp": {
+        "enabled": true,
+        "server": "time.apple.com",
+        "server_port": 123,
+        "interval": "30m",
+        "domain_resolver": "dns_server_bootstrap"
+    },
+    "certificate": {},
+    "certificate_providers": [],
+    "http_clients": [
+        {
+            "tag": "http_client_direct",
+            "detour": "DIRECT"
+        },
+        {
+            "tag": "http_client_proxy",
+            "detour": "AUTO-SELECT"
+        }
+    ],
+    "endpoints": [],
     "inbounds": [
         {
             "tag": "dns-in",
@@ -179,18 +149,13 @@
         {
             "type": "tun",
             "tag": "tun-in",
-            "interface_name": "tun0",
             "address": [
                 "172.19.0.1/30"
             ],
-            "mtu": 9000,
             "auto_route": true,
             "auto_redirect": true,
             "strict_route": true,
-            "dns_mode": "hijack",
-            "endpoint_independent_nat": true,
-            "udp_timeout": "5m",
-            "stack": "system"
+            "dns_mode": "hijack"
         }
     ],
     "outbounds": [
@@ -260,7 +225,7 @@
             "outbounds": [
                 "S-HK"
             ],
-            "url": "https://www.gstatic.com/generate_204",
+            "url": "http://www.qualcomm.cn/generate_204",
             "interval": "180s",
             "tolerance": 150,
             "interrupt_exist_connections": false,
@@ -272,7 +237,7 @@
             "outbounds": [
                 "S-TW"
             ],
-            "url": "https://www.gstatic.com/generate_204",
+            "url": "http://www.qualcomm.cn/generate_204",
             "interval": "180s",
             "tolerance": 150,
             "interrupt_exist_connections": false,
@@ -284,7 +249,7 @@
             "outbounds": [
                 "S-JP"
             ],
-            "url": "https://www.gstatic.com/generate_204",
+            "url": "http://www.qualcomm.cn/generate_204",
             "interval": "180s",
             "tolerance": 150,
             "interrupt_exist_connections": false,
@@ -296,7 +261,7 @@
             "outbounds": [
                 "S-SG"
             ],
-            "url": "https://www.gstatic.com/generate_204",
+            "url": "http://www.qualcomm.cn/generate_204",
             "interval": "180s",
             "tolerance": 150,
             "interrupt_exist_connections": false,
@@ -308,7 +273,7 @@
             "outbounds": [
                 "S-US"
             ],
-            "url": "https://www.gstatic.com/generate_204",
+            "url": "http://www.qualcomm.cn/generate_204",
             "interval": "180s",
             "tolerance": 150,
             "interrupt_exist_connections": false,
@@ -320,7 +285,7 @@
             "outbounds": [
                 "S-RD"
             ],
-            "url": "https://www.gstatic.com/generate_204",
+            "url": "http://www.qualcomm.cn/generate_204",
             "interval": "180s",
             "tolerance": 150,
             "interrupt_exist_connections": false,
@@ -330,7 +295,7 @@
             "tag": "AUTO-SELECT",
             "type": "urltest",
             "outbounds": [],
-            "url": "https://www.gstatic.com/generate_204",
+            "url": "http://www.qualcomm.cn/generate_204",
             "interval": "180s",
             "tolerance": 150,
             "interrupt_exist_connections": false,
@@ -342,7 +307,7 @@
             "outbounds": [
                 "DIRECT"
             ],
-            "url": "https://www.gstatic.com/generate_204",
+            "url": "http://www.qualcomm.cn/generate_204",
             "interval": "180s",
             "tolerance": 150,
             "interrupt_exist_connections": false,
@@ -354,10 +319,6 @@
         }
     ],
     "route": {
-        "final": "FINAL",
-        "auto_detect_interface": true,
-        "default_domain_resolver": "dns_server_bootstrap",
-        "default_http_client": "http_client_proxy",
         "rules": [
             {
                 "inbound": [
@@ -393,14 +354,6 @@
                     }
                 ],
                 "action": "reject"
-            },
-            {
-                "clash_mode": "Direct",
-                "outbound": "DIRECT"
-            },
-            {
-                "clash_mode": "Global",
-                "outbound": "GLOBAL"
             },
             {
                 "rule_set": "site-ads",
@@ -621,6 +574,32 @@
                 "format": "binary",
                 "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/cnip.srs"
             }
-        ]
+        ],
+        "final": "FINAL",
+        "auto_detect_interface": true,
+        "default_domain_resolver": "dns_server_bootstrap",
+        "default_http_client": "http_client_proxy"
+    },
+    "services": [
+        {
+            "type": "api",
+            "listen": "0.0.0.0",
+            "listen_port": 9091,
+            "secret": "",
+            "access_control_allow_origin": [],
+            "access_control_allow_private_network": true,
+            "dashboard": {
+                "enabled": true,
+                "path": "/etc/sing-box/dashboard",
+                "download_url": "https://github.com/SagerNet/sing-box-dashboard/archive/refs/heads/gh-pages.zip",
+                "http_client": "http_client_proxy"
+            }
+        }
+    ],
+    "experimental": {
+        "cache_file": {
+            "enabled": true,
+            "store_dns": true
+        }
     }
 }
