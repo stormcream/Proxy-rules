@@ -8,7 +8,7 @@
             {
                 "tag": "dns_server_proxy",
                 "type": "https",
-                "server": "cloudflare-dns.com",
+                "server": "dns.google",
                 "domain_resolver": "dns_server_hosts",
                 "detour": "DNS"
             },
@@ -28,9 +28,9 @@
                 "tag": "dns_server_hosts",
                 "type": "hosts",
                 "predefined": {
-                    "cloudflare-dns.com": [
-                        "1.1.1.1",
-                        "1.0.0.1"
+                    "dns.google": [
+                        "8.8.8.8",
+                        "8.8.4.4"
                     ],
                     "dns.alidns.com": [
                         "223.5.5.5",
@@ -44,6 +44,14 @@
             }
         ],
         "rules": [
+            {
+                "clash_mode": "Direct",
+                "server": "dns_server_direct"
+            },
+            {
+                "clash_mode": "Global",
+                "server": "dns_server_proxy"
+            },
             {
                 "rule_set": "site-ads",
                 "action": "reject"
@@ -111,7 +119,7 @@
         },
         {
             "tag": "http_client_proxy",
-            "detour": "AUTO-SELECT"
+            "detour": "AUTO"
         }
     ],
     "endpoints": [],
@@ -292,7 +300,7 @@
             "idle_timeout": "30m"
         },
         {
-            "tag": "AUTO-SELECT",
+            "tag": "AUTO",
             "type": "urltest",
             "outbounds": [],
             "url": "http://www.qualcomm.cn/generate_204",
@@ -302,7 +310,7 @@
             "idle_timeout": "30m"
         },
         {
-            "tag": "AUTO-TESTING",
+            "tag": "TESTING",
             "type": "urltest",
             "outbounds": [
                 "DIRECT"
@@ -354,6 +362,14 @@
                     }
                 ],
                 "action": "reject"
+            },
+            {
+                "clash_mode": "Direct",
+                "outbound": "DIRECT"
+            },
+            {
+                "clash_mode": "Global",
+                "outbound": "GLOBAL"
             },
             {
                 "rule_set": "site-ads",
@@ -597,6 +613,10 @@
         }
     ],
     "experimental": {
+        "clash_api": {
+            "external_controller": "0.0.0.0:9090",
+            "default_mode": "Rule"
+        },
         "cache_file": {
             "enabled": true,
             "store_dns": true
