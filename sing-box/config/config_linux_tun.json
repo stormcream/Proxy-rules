@@ -6,26 +6,26 @@
     "dns": {
         "servers": [
             {
-                "tag": "dns_server_proxy",
+                "tag": "dns-server-proxy",
                 "type": "https",
                 "server": "dns.google",
-                "domain_resolver": "dns_server_hosts",
+                "domain_resolver": "dns-server-hosts",
                 "detour": "DNS"
             },
             {
-                "tag": "dns_server_direct",
+                "tag": "dns-server-direct",
                 "type": "https",
                 "server": "dns.alidns.com",
-                "domain_resolver": "dns_server_hosts"
+                "domain_resolver": "dns-server-hosts"
             },
             {
-                "tag": "dns_server_bootstrap",
+                "tag": "dns-server-bootstrap",
                 "type": "https",
                 "server": "doh.pub",
-                "domain_resolver": "dns_server_hosts"
+                "domain_resolver": "dns-server-hosts"
             },
             {
-                "tag": "dns_server_hosts",
+                "tag": "dns-server-hosts",
                 "type": "hosts",
                 "predefined": {
                     "dns.google": [
@@ -46,11 +46,11 @@
         "rules": [
             {
                 "clash_mode": "Direct",
-                "server": "dns_server_direct"
+                "server": "dns-server-direct"
             },
             {
                 "clash_mode": "Global",
-                "server": "dns_server_proxy"
+                "server": "dns-server-proxy"
             },
             {
                 "rule_set": "site-ads",
@@ -61,11 +61,11 @@
                     "site-emby-self",
                     "site-proxy-self"
                 ],
-                "server": "dns_server_proxy"
+                "server": "dns-server-proxy"
             },
             {
                 "rule_set": "site-direct-self",
-                "server": "dns_server_direct"
+                "server": "dns-server-direct"
             },
             {
                 "rule_set": [
@@ -80,7 +80,7 @@
                     "site-tiktok",
                     "site-netflix"
                 ],
-                "server": "dns_server_proxy"
+                "server": "dns-server-proxy"
             },
             {
                 "rule_set": [
@@ -88,37 +88,41 @@
                     "site-apple",
                     "site-microsoft"
                 ],
-                "server": "dns_server_direct"
+                "server": "dns-server-direct"
             },
             {
                 "rule_set": "site-proxy",
-                "server": "dns_server_proxy"
+                "server": "dns-server-proxy"
             },
             {
                 "rule_set": "site-direct",
-                "server": "dns_server_direct"
+                "server": "dns-server-direct"
             }
         ],
-        "final": "dns_server_proxy",
+        "final": "dns-server-proxy",
         "strategy": "ipv4_only",
-        "cache_capacity": 4096
+        "cache_capacity": 16384,
+        "optimistic": {
+            "enabled": true,
+            "timeout": "5m0s"
+        }
     },
     "ntp": {
         "enabled": true,
         "server": "time.apple.com",
         "server_port": 123,
         "interval": "30m",
-        "domain_resolver": "dns_server_bootstrap"
+        "domain_resolver": "dns-server-bootstrap"
     },
     "certificate": {},
     "certificate_providers": [],
     "http_clients": [
         {
-            "tag": "http_client_direct",
+            "tag": "http-client-direct",
             "detour": "DIRECT"
         },
         {
-            "tag": "http_client_proxy",
+            "tag": "http-client-proxy",
             "detour": "AUTO"
         }
     ],
@@ -163,7 +167,9 @@
             "auto_route": true,
             "auto_redirect": true,
             "strict_route": true,
-            "dns_mode": "hijack"
+            "dns_mode": "hijack",
+            "udp_timeout": "1m0s",
+            "endpoint_independent_nat": true
         }
     ],
     "outbounds": [
@@ -593,8 +599,8 @@
         ],
         "final": "FINAL",
         "auto_detect_interface": true,
-        "default_domain_resolver": "dns_server_bootstrap",
-        "default_http_client": "http_client_proxy"
+        "default_domain_resolver": "dns-server-bootstrap",
+        "default_http_client": "http-client-proxy"
     },
     "services": [
         {
@@ -608,7 +614,7 @@
                 "enabled": true,
                 "path": "/etc/sing-box/dashboard",
                 "download_url": "https://github.com/SagerNet/sing-box-dashboard/archive/refs/heads/gh-pages.zip",
-                "http_client": "http_client_proxy"
+                "http_client": "http-client-proxy"
             }
         }
     ],
