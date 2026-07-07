@@ -14,8 +14,8 @@
             },
             {
                 "tag": "dns-server-direct",
-                "type": "https",
-                "server": "dns.alidns.com",
+                "type": "udp",
+                "server": "119.29.29.29",
                 "domain_resolver": "dns-server-hosts"
             },
             {
