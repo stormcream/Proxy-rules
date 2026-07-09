@@ -100,7 +100,7 @@
             }
         ],
         "final": "dns-server-proxy",
-        "strategy": "ipv4_only",
+        "strategy": "prefer_ipv4",
         "cache_capacity": 16384,
         "optimistic": {
             "enabled": true,
@@ -166,7 +166,7 @@
             ],
             "auto_route": true,
             "auto_redirect": true,
-            "strict_route": true,
+            "strict_route": false,
             "dns_mode": "hijack",
             "udp_timeout": "1m0s",
             "endpoint_independent_nat": true
@@ -343,6 +343,10 @@
                     "tun-in"
                 ],
                 "action": "sniff"
+            },
+            {
+                "ip_version": 6,
+                "outbound": "DIRECT"
             },
             {
                 "inbound": "dns-in",
