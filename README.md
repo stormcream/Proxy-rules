@@ -1,8 +1,7 @@
 # 自用sing-box配置与规则
 
 运行环境为OpenWRT momo 仅内核模式，使用 tun 版配置文件。  
-理论上 Tun 版配置文件修改一下 inbound 也可以全平台通用。  
-另一个为透明代理版本(tproxy)，因为目前不常用，随缘更新。  
+禁用LAN 接口 IPV6 
 
 当前配置文件需要 sing-box 版本为 1.14+
 
