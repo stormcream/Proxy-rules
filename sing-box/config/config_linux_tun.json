@@ -100,11 +100,11 @@
             }
         ],
         "final": "dns-server-proxy",
-        "strategy": "prefer_ipv4",
-        "cache_capacity": 16384,
+        "strategy": "prefer_ipv6",
+        "cache_capacity": 4096,
         "optimistic": {
             "enabled": true,
-            "timeout": "5m0s"
+            "timeout": "3d"
         }
     },
     "ntp": {
@@ -162,13 +162,19 @@
             "type": "tun",
             "tag": "tun-in",
             "address": [
-                "172.19.0.1/30"
+                "172.18.0.1/30",
+                "fdfe:dcba:9876::1/126"
             ],
+            "dns_mode": "hijack",
+            "dns_address": [
+                "172.18.0.2",
+                "fdfe:dcba:9876::2"
+            ],
+            "stack": "system",
             "auto_route": true,
             "auto_redirect": true,
-            "strict_route": false,
-            "dns_mode": "hijack",
-            "udp_timeout": "1m0s",
+            "strict_route": true,
+            "udp_timeout": "5m",
             "endpoint_independent_nat": true
         }
     ],
@@ -335,21 +341,19 @@
     "route": {
         "rules": [
             {
-                "inbound": [
-                    "http-in",
-                    "socks-in",
-                    "redirect-in",
-                    "tproxy-in",
-                    "tun-in"
-                ],
                 "action": "sniff"
             },
             {
-                "ip_version": 6,
-                "outbound": "DIRECT"
-            },
-            {
-                "inbound": "dns-in",
+                "type": "logical",
+                "mode": "or",
+                "rules": [
+                    {
+                        "protocol": "dns"
+                    },
+                    {
+                        "port": 53
+                    }
+                ],
                 "action": "hijack-dns"
             },
             {
