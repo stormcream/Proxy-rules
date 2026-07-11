@@ -1,6 +1,6 @@
 # 自用sing-box配置与规则
 
-运行环境为OpenWRT momo 仅内核模式，使用 tun 版配置文件。  
+运行环境为OpenWRT momo 仅内核模式，使用 tun 入栈。  
 禁用LAN 接口 IPV6 
 
 当前配置文件需要 sing-box 版本为 1.14+
