@@ -8,7 +8,7 @@
             {
                 "tag": "dns-server-proxy",
                 "type": "https",
-                "server": "dns.google",
+                "server": "cloudflare-dns.com",
                 "domain_resolver": "dns-server-hosts",
                 "detour": "DNS"
             },
@@ -31,6 +31,10 @@
                     "dns.google": [
                         "8.8.8.8",
                         "8.8.4.4"
+                    ],
+                    "cloudflare-dns.com": [
+                        "1.1.1.1",
+                        "1.0.0.1"
                     ],
                     "dns.alidns.com": [
                         "223.5.5.5",
@@ -108,7 +112,6 @@
             }
         ],
         "final": "dns-server-proxy",
-        "strategy": "prefer_ipv6",
         "cache_capacity": 4096,
         "optimistic": {
             "enabled": true,
@@ -178,7 +181,7 @@
                 "172.18.0.2",
                 "fdfe:dcba:9876::2"
             ],
-            "stack": "system",
+            "stack": "mixed",
             "auto_route": true,
             "auto_redirect": true,
             "strict_route": true,
