@@ -8,7 +8,8 @@
       "domain_suffix": [
           "xmancdn.com", 
           "sntp.me",
-          "pc528.net"
+          "pc528.net",
+          "api-huacloud.dev"
       ],
       "domain_regex": []
     }
