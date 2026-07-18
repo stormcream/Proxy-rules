@@ -6,25 +6,6 @@
     "dns": {
         "servers": [
             {
-                "tag": "dns-server-proxy",
-                "type": "https",
-                "server": "cloudflare-dns.com",
-                "domain_resolver": "dns-server-hosts",
-                "detour": "DNS"
-            },
-            {
-                "tag": "dns-server-direct",
-                "type": "udp",
-                "server": "119.29.29.29",
-                "domain_resolver": "dns-server-hosts"
-            },
-            {
-                "tag": "dns-server-bootstrap",
-                "type": "https",
-                "server": "doh.pub",
-                "domain_resolver": "dns-server-hosts"
-            },
-            {
                 "tag": "dns-server-hosts",
                 "type": "hosts",
                 "predefined": {
@@ -45,6 +26,25 @@
                         "1.12.12.12"
                     ]
                 }
+            },
+            {
+                "tag": "dns-server-proxy",
+                "type": "https",
+                "server": "cloudflare-dns.com",
+                "domain_resolver": "dns-server-hosts",
+                "detour": "DNS"
+            },
+            {
+                "tag": "dns-server-direct",
+                "type": "h3",
+                "server": "dns.alidns.com",
+                "domain_resolver": "dns-server-hosts"
+            },
+            {
+                "tag": "dns-server-bootstrap",
+                "type": "https",
+                "server": "doh.pub",
+                "domain_resolver": "dns-server-hosts"
             }
         ],
         "rules": [
@@ -119,7 +119,7 @@
         }
     },
     "ntp": {
-        "enabled": true,
+        "enabled": false,
         "server": "time.apple.com",
         "server_port": 123,
         "interval": "30m",
@@ -250,11 +250,9 @@
             "outbounds": [
                 "S-HK"
             ],
-            "url": "http://www.qualcomm.cn/generate_204",
+            "url": "https://www.gstatic.com/generate_204",
             "interval": "180s",
-            "tolerance": 150,
-            "interrupt_exist_connections": false,
-            "idle_timeout": "30m"
+            "tolerance": 100
         },
         {
             "tag": "A-TW",
@@ -262,11 +260,9 @@
             "outbounds": [
                 "S-TW"
             ],
-            "url": "http://www.qualcomm.cn/generate_204",
+            "url": "https://www.gstatic.com/generate_204",
             "interval": "180s",
-            "tolerance": 150,
-            "interrupt_exist_connections": false,
-            "idle_timeout": "30m"
+            "tolerance": 100
         },
         {
             "tag": "A-JP",
@@ -274,11 +270,9 @@
             "outbounds": [
                 "S-JP"
             ],
-            "url": "http://www.qualcomm.cn/generate_204",
+            "url": "https://www.gstatic.com/generate_204",
             "interval": "180s",
-            "tolerance": 150,
-            "interrupt_exist_connections": false,
-            "idle_timeout": "30m"
+            "tolerance": 100
         },
         {
             "tag": "A-SG",
@@ -286,11 +280,9 @@
             "outbounds": [
                 "S-SG"
             ],
-            "url": "http://www.qualcomm.cn/generate_204",
+            "url": "https://www.gstatic.com/generate_204",
             "interval": "180s",
-            "tolerance": 150,
-            "interrupt_exist_connections": false,
-            "idle_timeout": "30m"
+            "tolerance": 100
         },
         {
             "tag": "A-US",
@@ -298,11 +290,9 @@
             "outbounds": [
                 "S-US"
             ],
-            "url": "http://www.qualcomm.cn/generate_204",
+            "url": "https://www.gstatic.com/generate_204",
             "interval": "180s",
-            "tolerance": 150,
-            "interrupt_exist_connections": false,
-            "idle_timeout": "30m"
+            "tolerance": 100
         },
         {
             "tag": "A-RD",
@@ -310,21 +300,17 @@
             "outbounds": [
                 "S-RD"
             ],
-            "url": "http://www.qualcomm.cn/generate_204",
+            "url": "https://www.gstatic.com/generate_204",
             "interval": "180s",
-            "tolerance": 150,
-            "interrupt_exist_connections": false,
-            "idle_timeout": "30m"
+            "tolerance": 100
         },
         {
             "tag": "AUTO",
             "type": "urltest",
             "outbounds": [],
-            "url": "http://www.qualcomm.cn/generate_204",
+            "url": "https://www.gstatic.com/generate_204",
             "interval": "180s",
-            "tolerance": 150,
-            "interrupt_exist_connections": false,
-            "idle_timeout": "30m"
+            "tolerance": 100
         },
         {
             "tag": "TESTING",
@@ -332,11 +318,9 @@
             "outbounds": [
                 "DIRECT"
             ],
-            "url": "http://www.qualcomm.cn/generate_204",
+            "url": "https://www.gstatic.com/generate_204",
             "interval": "180s",
-            "tolerance": 150,
-            "interrupt_exist_connections": false,
-            "idle_timeout": "30m"
+            "tolerance": 100
         },
         {
             "tag": "DIRECT",
@@ -636,6 +620,7 @@
         },
         "cache_file": {
             "enabled": true,
+            "path": "/etc/sing-box/cache.db",
             "store_dns": true
         }
     }
