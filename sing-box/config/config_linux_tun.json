@@ -177,16 +177,10 @@
                 "fdfe:dcba:9876::1/126"
             ],
             "dns_mode": "hijack",
-            "dns_address": [
-                "172.18.0.2",
-                "fdfe:dcba:9876::2"
-            ],
             "stack": "mixed",
             "auto_route": true,
             "auto_redirect": true,
-            "strict_route": true,
-            "udp_timeout": "5m",
-            "endpoint_independent_nat": true
+            "strict_route": true
         }
     ],
     "outbounds": [
@@ -362,19 +356,7 @@
                 "action": "sniff"
             },
             {
-                "type": "logical",
-                "mode": "or",
-                "rules": [
-                    {
-                        "inbound": "dns-in"
-                    },
-                    {
-                        "protocol": "dns"
-                    },
-                    {
-                        "port": 53
-                    }
-                ],
+                "inbound": "dns-in",
                 "action": "hijack-dns"
             },
             {
