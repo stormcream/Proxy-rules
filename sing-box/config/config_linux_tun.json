@@ -129,10 +129,6 @@
     "certificate_providers": [],
     "http_clients": [
         {
-            "tag": "http-client-direct",
-            "detour": "DIRECT"
-        },
-        {
             "tag": "http-client-proxy",
             "detour": "AUTO"
         }
