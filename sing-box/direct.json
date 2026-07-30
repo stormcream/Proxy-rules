@@ -9,7 +9,8 @@
           "xmancdn.com", 
           "sntp.me",
           "pc528.net",
-          "api-huacloud.dev"
+          "api-huacloud.dev",
+          "s.xudp.net"
       ],
       "domain_regex": []
     }
