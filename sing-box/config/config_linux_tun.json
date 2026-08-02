@@ -13,7 +13,7 @@
                         "8.8.8.8",
                         "8.8.4.4"
                     ],
-                    "cloudflare-dns.com": [
+                    "one.one.one.one": [
                         "1.1.1.1",
                         "1.0.0.1"
                     ],
@@ -30,9 +30,9 @@
             {
                 "tag": "dns-server-proxy",
                 "type": "https",
-                "server": "cloudflare-dns.com",
+                "server": "dns.google",
                 "domain_resolver": "dns-server-hosts",
-                "detour": "DNS"
+                "detour": "DNSOUT"
             },
             {
                 "tag": "dns-server-direct",
@@ -57,11 +57,11 @@
                 "action": "reject"
             },
             {
-                "clash_mode": "Direct",
+                "clash_mode": "direct",
                 "server": "dns-server-direct"
             },
             {
-                "clash_mode": "Global",
+                "clash_mode": "global",
                 "server": "dns-server-proxy"
             },
             {
@@ -112,28 +112,21 @@
             }
         ],
         "final": "dns-server-proxy",
-        "cache_capacity": 4096,
-        "optimistic": {
-            "enabled": true,
-            "timeout": "12h"
-        }
+        "cache_capacity": 4096
     },
     "ntp": {
-        "enabled": false,
+        "enabled": true,
         "server": "time.apple.com",
         "server_port": 123,
         "interval": "30m",
         "domain_resolver": "dns-server-bootstrap"
     },
-    "certificate": {},
-    "certificate_providers": [],
     "http_clients": [
         {
             "tag": "http-client-proxy",
             "detour": "AUTO"
         }
     ],
-    "endpoints": [],
     "inbounds": [
         {
             "tag": "dns-in",
@@ -173,10 +166,12 @@
                 "fdfe:dcba:9876::1/126"
             ],
             "dns_mode": "hijack",
-            "stack": "mixed",
             "auto_route": true,
             "auto_redirect": true,
-            "strict_route": true
+            "strict_route": true,
+            "udp_timeout": "1m",
+            "stack": "system",
+            "endpoint_independent_nat": true
         }
     ],
     "outbounds": [
@@ -206,7 +201,7 @@
             "outbounds": []
         },
         {
-            "tag": "DNS",
+            "tag": "DNSOUT",
             "type": "selector",
             "outbounds": []
         },
@@ -246,9 +241,9 @@
             "outbounds": [
                 "S-HK"
             ],
-            "url": "https://www.gstatic.com/generate_204",
-            "interval": "180s",
-            "tolerance": 100
+            "url": "http://cp.cloudflare.com/generate_204",
+            "interval": "3m",
+            "tolerance": 150
         },
         {
             "tag": "A-TW",
@@ -256,9 +251,9 @@
             "outbounds": [
                 "S-TW"
             ],
-            "url": "https://www.gstatic.com/generate_204",
-            "interval": "180s",
-            "tolerance": 100
+            "url": "http://cp.cloudflare.com/generate_204",
+            "interval": "3m",
+            "tolerance": 150
         },
         {
             "tag": "A-JP",
@@ -266,9 +261,9 @@
             "outbounds": [
                 "S-JP"
             ],
-            "url": "https://www.gstatic.com/generate_204",
-            "interval": "180s",
-            "tolerance": 100
+            "url": "http://cp.cloudflare.com/generate_204",
+            "interval": "3m",
+            "tolerance": 150
         },
         {
             "tag": "A-SG",
@@ -276,9 +271,9 @@
             "outbounds": [
                 "S-SG"
             ],
-            "url": "https://www.gstatic.com/generate_204",
-            "interval": "180s",
-            "tolerance": 100
+            "url": "http://cp.cloudflare.com/generate_204",
+            "interval": "3m",
+            "tolerance": 150
         },
         {
             "tag": "A-US",
@@ -286,9 +281,9 @@
             "outbounds": [
                 "S-US"
             ],
-            "url": "https://www.gstatic.com/generate_204",
-            "interval": "180s",
-            "tolerance": 100
+            "url": "http://cp.cloudflare.com/generate_204",
+            "interval": "3m",
+            "tolerance": 150
         },
         {
             "tag": "A-RD",
@@ -296,17 +291,17 @@
             "outbounds": [
                 "S-RD"
             ],
-            "url": "https://www.gstatic.com/generate_204",
-            "interval": "180s",
-            "tolerance": 100
+            "url": "http://cp.cloudflare.com/generate_204",
+            "interval": "3m",
+            "tolerance": 150
         },
         {
             "tag": "AUTO",
             "type": "urltest",
             "outbounds": [],
-            "url": "https://www.gstatic.com/generate_204",
-            "interval": "180s",
-            "tolerance": 100
+            "url": "http://cp.cloudflare.com/generate_204",
+            "interval": "3m",
+            "tolerance": 150
         },
         {
             "tag": "TESTING",
@@ -314,33 +309,26 @@
             "outbounds": [
                 "DIRECT"
             ],
-            "url": "https://www.gstatic.com/generate_204",
-            "interval": "180s",
-            "tolerance": 100
+            "url": "http://cp.cloudflare.com/generate_204",
+            "interval": "3m",
+            "tolerance": 150
         },
         {
             "tag": "DIRECT",
             "type": "direct"
+        },
+        {
+            "tag": "BLOCK",
+            "type": "block"
         }
     ],
     "route": {
         "rules": [
             {
-                "inbound": [
-                    "tun-in",
-                    "http-in",
-                    "socks-in",
-                    "redirect-in",
-                    "tproxy-in"
-                ],
                 "action": "sniff"
             },
             {
-                "inbound": "dns-in",
-                "action": "hijack-dns"
-            },
-            {
-                "ip_is_private": true,
+                "rule_set": "site-private",
                 "outbound": "DIRECT"
             },
             {
@@ -358,14 +346,15 @@
                         "protocol": "stun"
                     }
                 ],
-                "action": "reject"
+                "action": "reject",
+                "method": "drop"
             },
             {
-                "clash_mode": "Direct",
+                "clash_mode": "direct",
                 "outbound": "DIRECT"
             },
             {
-                "clash_mode": "Global",
+                "clash_mode": "global",
                 "outbound": "GLOBAL"
             },
             {
@@ -455,6 +444,12 @@
             }
         ],
         "rule_set": [
+            {
+                "type": "remote",
+                "tag": "site-private",
+                "format": "binary",
+                "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/private.srs"
+            },
             {
                 "type": "remote",
                 "tag": "site-ads",
@@ -612,7 +607,7 @@
     "experimental": {
         "clash_api": {
             "external_controller": "0.0.0.0:9090",
-            "default_mode": "Rule"
+            "default_mode": "rule"
         },
         "cache_file": {
             "enabled": true,
