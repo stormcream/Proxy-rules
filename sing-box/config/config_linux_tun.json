@@ -36,7 +36,7 @@
             },
             {
                 "tag": "dns-server-direct",
-                "type": "h3",
+                "type": "https",
                 "server": "dns.alidns.com",
                 "domain_resolver": "dns-server-hosts"
             },
@@ -112,7 +112,12 @@
             }
         ],
         "final": "dns-server-proxy",
-        "cache_capacity": 4096
+        "cache_capacity": 4096,
+        "strategy": "ipv4_only",
+        "optimistic": {
+            "enabled": true,
+            "timeout": "12h"
+        }
     },
     "ntp": {
         "enabled": true,
@@ -162,16 +167,14 @@
             "tag": "tun-in",
             "type": "tun",
             "address": [
-                "172.18.0.1/30",
+                "172.19.0.1/30",
                 "fdfe:dcba:9876::1/126"
             ],
             "dns_mode": "hijack",
             "auto_route": true,
             "auto_redirect": true,
             "strict_route": true,
-            "udp_timeout": "1m",
-            "stack": "system",
-            "endpoint_independent_nat": true
+            "stack": "gvisor"
         }
     ],
     "outbounds": [
@@ -187,6 +190,11 @@
         },
         {
             "tag": "EMBY",
+            "type": "selector",
+            "outbounds": []
+        },
+        {
+            "tag": "AIGC",
             "type": "selector",
             "outbounds": []
         },
@@ -328,7 +336,7 @@
                 "action": "sniff"
             },
             {
-                "rule_set": "site-private",
+                "ip_is_private": true,
                 "outbound": "DIRECT"
             },
             {
@@ -375,7 +383,7 @@
             },
             {
                 "rule_set": "site-ai",
-                "outbound": "PROXY"
+                "outbound": "AIGC"
             },
             {
                 "rule_set": "site-youtube",
@@ -446,12 +454,6 @@
         "rule_set": [
             {
                 "type": "remote",
-                "tag": "site-private",
-                "format": "binary",
-                "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/private.srs"
-            },
-            {
-                "type": "remote",
                 "tag": "site-ads",
                 "format": "binary",
                 "url": "https://raw.githubusercontent.com/217heidai/adblockfilters/main/rules/adblocksingbox.srs"
@@ -478,7 +480,7 @@
                 "tag": "site-ai",
                 "type": "remote",
                 "format": "binary",
-                "url": "https://github.com/SagerNet/sing-geosite/raw/refs/heads/rule-set/geosite-category-ai-!cn.srs"
+                "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/ai.srs"
             },
             {
                 "tag": "site-youtube",
@@ -585,7 +587,10 @@
         ],
         "final": "FINAL",
         "auto_detect_interface": true,
-        "default_domain_resolver": "dns-server-bootstrap",
+        "default_domain_resolver": {
+            "server": "dns-server-bootstrap",
+            "strategy": "prefer_ipv6"
+        },
         "default_http_client": "http-client-proxy"
     },
     "services": [
