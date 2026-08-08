@@ -1,16 +1,13 @@
 # 自用sing-box配置与规则
 
-运行环境为OpenWRT momo 仅内核模式，使用 tun 入栈。  
-禁用LAN 接口 IPV6 
+sing-box >= 1.14.0-beta.9  
+开启 OpenWRT momo 仅内核模式  
+关闭 OpenWRT LAN 接口 IPV6 保留 wan 口 IPV6  
+关闭 OpenWRT DNS 重定向  
 
-当前配置文件需要 sing-box 版本为 1.14+
+本配置支持IPV6节点，即被代理机只能使用代理机的IPV4访问目标网站，但是在代理机存在IPV6且可用的情况下，sing-box与代理机器之间以IPV6优先通信，代理机表现为IPV6入，IPV4出，否则为IPV4入，IPV4出  
 
 # 文件说明
-direct.json 自定义直连列表，对应配置文件tag site-direct-self  
-proxy.json 自定义代理列表，对应配置文件tag site-proxy-self  
-emby.json 自用emby服务器列表，对应配置文件tag site-emby-self  
-
-# 规则集来源
-[sing-box geosite](https://github.com/SagerNet/sing-geosite/tree/rule-set)  
-[DustinWin](https://github.com/DustinWin/ruleset_geodata/tree/main)  
-[217heidai](https://github.com/217heidai/adblockfilters)
+direct.json 自定义直连列表，对应配置文件tag rule-direct-self  
+proxy.json 自定义代理列表，对应配置文件tag rule-proxy-self  
+emby.json 自用emby服务器列表，对应配置文件tag rule-emby-self  

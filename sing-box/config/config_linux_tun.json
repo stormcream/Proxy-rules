@@ -1,4 +1,5 @@
 {
+    "$schema": "https://sing-box.sagernet.org/schema.json",
     "log": {
         "level": "info",
         "timestamp": true
@@ -6,14 +7,14 @@
     "dns": {
         "servers": [
             {
-                "tag": "dns-server-hosts",
+                "tag": "dns-hosts",
                 "type": "hosts",
                 "predefined": {
                     "dns.google": [
                         "8.8.8.8",
                         "8.8.4.4"
                     ],
-                    "one.one.one.one": [
+                    "cloudflare-dns.com": [
                         "1.1.1.1",
                         "1.0.0.1"
                     ],
@@ -28,23 +29,23 @@
                 }
             },
             {
-                "tag": "dns-server-proxy",
+                "tag": "dns-proxy",
                 "type": "https",
                 "server": "dns.google",
-                "domain_resolver": "dns-server-hosts",
+                "domain_resolver": "dns-hosts",
                 "detour": "DNSOUT"
             },
             {
-                "tag": "dns-server-direct",
+                "tag": "dns-direct",
                 "type": "https",
                 "server": "dns.alidns.com",
-                "domain_resolver": "dns-server-hosts"
+                "domain_resolver": "dns-hosts"
             },
             {
-                "tag": "dns-server-bootstrap",
+                "tag": "dns-bootstrap",
                 "type": "https",
                 "server": "doh.pub",
-                "domain_resolver": "dns-server-hosts"
+                "domain_resolver": "dns-hosts"
             }
         ],
         "rules": [
@@ -58,60 +59,63 @@
             },
             {
                 "clash_mode": "direct",
-                "server": "dns-server-direct"
+                "server": "dns-direct"
             },
             {
                 "clash_mode": "global",
-                "server": "dns-server-proxy"
+                "server": "dns-proxy"
             },
             {
-                "rule_set": "site-ads",
+                "rule_set": [
+                    "rule-blockHttpDNS",
+                    "rule-ads"
+                ],
                 "action": "reject"
             },
             {
                 "rule_set": [
-                    "site-emby-self",
-                    "site-proxy-self"
+                    "rule-emby-self",
+                    "rule-proxy-self"
                 ],
-                "server": "dns-server-proxy"
+                "server": "dns-proxy"
             },
             {
-                "rule_set": "site-direct-self",
-                "server": "dns-server-direct"
+                "rule_set": "rule-direct-self",
+                "server": "dns-direct"
             },
             {
                 "rule_set": [
-                    "site-ai",
-                    "site-youtube",
-                    "site-google",
-                    "site-github",
-                    "site-telegram",
-                    "site-x",
-                    "site-facebook",
-                    "site-twitch",
-                    "site-tiktok",
-                    "site-netflix"
+                    "rule-ai",
+                    "rule-youtube",
+                    "rule-google",
+                    "rule-github",
+                    "rule-telegram",
+                    "rule-x",
+                    "rule-facebook",
+                    "rule-twitch",
+                    "rule-tiktok",
+                    "rule-netflix"
                 ],
-                "server": "dns-server-proxy"
+                "server": "dns-proxy"
             },
             {
                 "rule_set": [
-                    "site-bilibili",
-                    "site-apple",
-                    "site-microsoft"
+                    "rule-bilibili",
+                    "rule-apple",
+                    "rule-microsoft"
                 ],
-                "server": "dns-server-direct"
+                "server": "dns-direct"
             },
             {
-                "rule_set": "site-proxy",
-                "server": "dns-server-proxy"
+                "rule_set": "rule-proxy",
+                "server": "dns-proxy"
             },
             {
-                "rule_set": "site-direct",
-                "server": "dns-server-direct"
+                "rule_set": "rule-direct",
+                "server": "dns-direct"
             }
         ],
-        "final": "dns-server-proxy",
+        "final": "dns-proxy",
         "cache_capacity": 4096,
         "strategy": "ipv4_only",
         "optimistic": {
@@ -124,11 +128,14 @@
         "server": "time.apple.com",
         "server_port": 123,
         "interval": "30m",
-        "domain_resolver": "dns-server-bootstrap"
+        "domain_resolver": "dns-bootstrap"
     },
     "http_clients": [
         {
-            "tag": "http-client-proxy",
+            "tag": "http-proxy",
+            "version": 2,
+            "stream_receive_window": 0,
+            "connection_receive_window": 0,
             "detour": "AUTO"
         }
     ],
@@ -167,14 +174,14 @@
             "tag": "tun-in",
             "type": "tun",
             "address": [
-                "172.19.0.1/30",
+                "10.8.0.1/24",
                 "fdfe:dcba:9876::1/126"
             ],
             "dns_mode": "hijack",
             "auto_route": true,
             "auto_redirect": true,
             "strict_route": true,
-            "stack": "gvisor"
+            "stack": "mixed"
         }
     ],
     "outbounds": [
@@ -214,6 +221,24 @@
             "outbounds": []
         },
         {
+            "tag": "AUTO",
+            "type": "urltest",
+            "outbounds": [],
+            "url": "http://cp.cloudflare.com/generate_204",
+            "interval": "3m",
+            "tolerance": 100
+        },
+        {
+            "tag": "TESTING",
+            "type": "urltest",
+            "outbounds": [
+                "DIRECT"
+            ],
+            "url": "http://cp.cloudflare.com/generate_204",
+            "interval": "3m",
+            "tolerance": 100
+        },
+        {
             "tag": "S-HK",
             "type": "selector",
             "outbounds": []
@@ -251,7 +276,7 @@
             ],
             "url": "http://cp.cloudflare.com/generate_204",
             "interval": "3m",
-            "tolerance": 150
+            "tolerance": 100
         },
         {
             "tag": "A-TW",
@@ -261,7 +286,7 @@
             ],
             "url": "http://cp.cloudflare.com/generate_204",
             "interval": "3m",
-            "tolerance": 150
+            "tolerance": 100
         },
         {
             "tag": "A-JP",
@@ -271,7 +296,7 @@
             ],
             "url": "http://cp.cloudflare.com/generate_204",
             "interval": "3m",
-            "tolerance": 150
+            "tolerance": 100
         },
         {
             "tag": "A-SG",
@@ -281,7 +306,7 @@
             ],
             "url": "http://cp.cloudflare.com/generate_204",
             "interval": "3m",
-            "tolerance": 150
+            "tolerance": 100
         },
         {
             "tag": "A-US",
@@ -291,7 +316,7 @@
             ],
             "url": "http://cp.cloudflare.com/generate_204",
             "interval": "3m",
-            "tolerance": 150
+            "tolerance": 100
         },
         {
             "tag": "A-RD",
@@ -301,25 +326,7 @@
             ],
             "url": "http://cp.cloudflare.com/generate_204",
             "interval": "3m",
-            "tolerance": 150
-        },
-        {
-            "tag": "AUTO",
-            "type": "urltest",
-            "outbounds": [],
-            "url": "http://cp.cloudflare.com/generate_204",
-            "interval": "3m",
-            "tolerance": 150
-        },
-        {
-            "tag": "TESTING",
-            "type": "urltest",
-            "outbounds": [
-                "DIRECT"
-            ],
-            "url": "http://cp.cloudflare.com/generate_204",
-            "interval": "3m",
-            "tolerance": 150
+            "tolerance": 100
         },
         {
             "tag": "DIRECT",
@@ -366,87 +373,87 @@
                 "outbound": "GLOBAL"
             },
             {
-                "rule_set": "site-ads",
+                "rule_set": "rule-ads",
                 "action": "reject"
             },
             {
-                "rule_set": "site-proxy-self",
+                "rule_set": "rule-proxy-self",
                 "outbound": "PROXY"
             },
             {
-                "rule_set": "site-emby-self",
+                "rule_set": "rule-emby-self",
                 "outbound": "EMBY"
             },
             {
-                "rule_set": "site-direct-self",
+                "rule_set": "rule-direct-self",
                 "outbound": "DIRECT"
             },
             {
-                "rule_set": "site-ai",
+                "rule_set": "rule-ai",
                 "outbound": "AIGC"
             },
             {
-                "rule_set": "site-youtube",
+                "rule_set": "rule-youtube",
                 "outbound": "PROXY"
             },
             {
-                "rule_set": "site-google",
+                "rule_set": "rule-google",
                 "outbound": "PROXY"
             },
             {
-                "rule_set": "site-github",
+                "rule_set": "rule-github",
                 "outbound": "PROXY"
             },
             {
                 "rule_set": [
-                    "site-telegram",
-                    "ip-telegram"
+                    "rule-telegram",
+                    "rule-ip-telegram"
                 ],
                 "outbound": "PROXY"
             },
             {
-                "rule_set": "site-x",
+                "rule_set": "rule-x",
                 "outbound": "PROXY"
             },
             {
-                "rule_set": "site-facebook",
+                "rule_set": "rule-facebook",
                 "outbound": "PROXY"
             },
             {
-                "rule_set": "site-twitch",
+                "rule_set": "rule-twitch",
                 "outbound": "PROXY"
             },
             {
-                "rule_set": "site-tiktok",
+                "rule_set": "rule-tiktok",
                 "outbound": "PROXY"
             },
             {
                 "rule_set": [
-                    "site-netflix",
-                    "ip-netflix"
+                    "rule-netflix",
+                    "rule-ip-netflix"
                 ],
                 "outbound": "PROXY"
             },
             {
-                "rule_set": "site-bilibili",
+                "rule_set": "rule-bilibili",
                 "outbound": "DIRECT"
             },
             {
-                "rule_set": "site-apple",
+                "rule_set": "rule-apple",
                 "outbound": "DIRECT"
             },
             {
-                "rule_set": "site-microsoft",
+                "rule_set": "rule-microsoft",
                 "outbound": "DIRECT"
             },
             {
-                "rule_set": "site-proxy",
+                "rule_set": "rule-proxy",
                 "outbound": "PROXY"
             },
             {
                 "rule_set": [
-                    "site-direct",
-                    "ip-cn"
+                    "rule-direct",
+                    "rule-ip-cn"
                 ],
                 "outbound": "DIRECT"
             }
@@ -454,132 +461,138 @@
         "rule_set": [
             {
                 "type": "remote",
-                "tag": "site-ads",
+                "tag": "rule-blockHttpDNS",
+                "format": "binary",
+                "url": "https://raw.githubusercontent.com/senshinya/singbox_ruleset/refs/heads/main/rule/BlockHttpDNS/BlockHttpDNS.srs"
+            },
+            {
+                "type": "remote",
+                "tag": "rule-ads",
                 "format": "binary",
                 "url": "https://raw.githubusercontent.com/217heidai/adblockfilters/main/rules/adblocksingbox.srs"
             },
             {
-                "tag": "site-emby-self",
+                "tag": "rule-emby-self",
                 "type": "remote",
                 "format": "source",
                 "url": "https://raw.githubusercontent.com/stormcream/Proxy-rules/refs/heads/main/sing-box/emby.json"
             },
             {
-                "tag": "site-proxy-self",
+                "tag": "rule-proxy-self",
                 "type": "remote",
                 "format": "source",
                 "url": "https://raw.githubusercontent.com/stormcream/Proxy-rules/refs/heads/main/sing-box/proxy.json"
             },
             {
-                "tag": "site-direct-self",
+                "tag": "rule-direct-self",
                 "type": "remote",
                 "format": "source",
                 "url": "https://raw.githubusercontent.com/stormcream/Proxy-rules/refs/heads/main/sing-box/direct.json"
             },
             {
-                "tag": "site-ai",
+                "tag": "rule-ai",
                 "type": "remote",
                 "format": "binary",
                 "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/ai.srs"
             },
             {
-                "tag": "site-youtube",
+                "tag": "rule-youtube",
                 "type": "remote",
                 "format": "binary",
                 "url": "https://github.com/SagerNet/sing-geosite/raw/refs/heads/rule-set/geosite-youtube.srs"
             },
             {
-                "tag": "site-google",
+                "tag": "rule-google",
                 "type": "remote",
                 "format": "binary",
                 "url": "https://github.com/SagerNet/sing-geosite/raw/refs/heads/rule-set/geosite-google.srs"
             },
             {
-                "tag": "site-github",
+                "tag": "rule-github",
                 "type": "remote",
                 "format": "binary",
                 "url": "https://github.com/SagerNet/sing-geosite/raw/refs/heads/rule-set/geosite-github.srs"
             },
             {
-                "tag": "site-telegram",
+                "tag": "rule-telegram",
                 "type": "remote",
                 "format": "binary",
                 "url": "https://github.com/SagerNet/sing-geosite/raw/refs/heads/rule-set/geosite-telegram.srs"
             },
             {
-                "tag": "site-x",
+                "tag": "rule-x",
                 "type": "remote",
                 "format": "binary",
                 "url": "https://github.com/SagerNet/sing-geosite/raw/refs/heads/rule-set/geosite-x.srs"
             },
             {
-                "tag": "site-facebook",
+                "tag": "rule-facebook",
                 "type": "remote",
                 "format": "binary",
                 "url": "https://github.com/SagerNet/sing-geosite/raw/refs/heads/rule-set/geosite-facebook.srs"
             },
             {
-                "tag": "site-bilibili",
+                "tag": "rule-bilibili",
                 "type": "remote",
                 "format": "binary",
                 "url": "https://github.com/SagerNet/sing-geosite/raw/refs/heads/rule-set/geosite-bilibili.srs"
             },
             {
-                "tag": "site-twitch",
+                "tag": "rule-twitch",
                 "type": "remote",
                 "format": "binary",
                 "url": "https://github.com/SagerNet/sing-geosite/raw/refs/heads/rule-set/geosite-twitch.srs"
             },
             {
-                "tag": "site-tiktok",
+                "tag": "rule-tiktok",
                 "type": "remote",
                 "format": "binary",
                 "url": "https://github.com/SagerNet/sing-geosite/raw/refs/heads/rule-set/geosite-tiktok.srs"
             },
             {
-                "tag": "site-netflix",
+                "tag": "rule-netflix",
                 "type": "remote",
                 "format": "binary",
                 "url": "https://github.com/SagerNet/sing-geosite/raw/refs/heads/rule-set/geosite-netflix.srs"
             },
             {
-                "tag": "site-apple",
+                "tag": "rule-apple",
                 "type": "remote",
                 "format": "binary",
                 "url": "https://github.com/SagerNet/sing-geosite/raw/refs/heads/rule-set/geosite-apple.srs"
             },
             {
-                "tag": "site-microsoft",
+                "tag": "rule-microsoft",
                 "type": "remote",
                 "format": "binary",
                 "url": "https://github.com/SagerNet/sing-geosite/raw/refs/heads/rule-set/geosite-microsoft.srs"
             },
             {
-                "tag": "site-proxy",
+                "tag": "rule-proxy",
                 "type": "remote",
                 "format": "binary",
                 "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/proxy.srs"
             },
             {
-                "tag": "site-direct",
+                "tag": "rule-direct",
                 "type": "remote",
                 "format": "binary",
                 "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/cn.srs"
             },
             {
-                "tag": "ip-telegram",
+                "tag": "rule-ip-telegram",
                 "type": "remote",
                 "format": "binary",
                 "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/telegramip.srs"
             },
             {
-                "tag": "ip-netflix",
+                "tag": "rule-ip-netflix",
                 "type": "remote",
                 "format": "binary",
                 "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/netflixip.srs"
             },
             {
-                "tag": "ip-cn",
+                "tag": "rule-ip-cn",
                 "type": "remote",
                 "format": "binary",
                 "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/cnip.srs"
@@ -588,10 +601,10 @@
         "final": "FINAL",
         "auto_detect_interface": true,
         "default_domain_resolver": {
-            "server": "dns-server-bootstrap",
+            "server": "dns-bootstrap",
             "strategy": "prefer_ipv6"
         },
-        "default_http_client": "http-client-proxy"
+        "default_http_client": "http-proxy"
     },
     "services": [
         {
@@ -605,7 +618,7 @@
                 "enabled": true,
                 "path": "/etc/sing-box/dashboard",
                 "download_url": "https://github.com/SagerNet/sing-box-dashboard/archive/refs/heads/gh-pages.zip",
-                "http_client": "http-client-proxy"
+                "http_client": "http-proxy"
             }
         }
     ],
