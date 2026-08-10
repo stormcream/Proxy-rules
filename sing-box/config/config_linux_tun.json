@@ -141,7 +141,7 @@
             "version": 2,
             "stream_receive_window": 0,
             "connection_receive_window": 0,
-            "detour": "AUTO"
+            "detour": "Auto"
         }
     ],
     "inbounds": [
@@ -190,32 +190,67 @@
     ],
     "outbounds": [
         {
-            "tag": "PROXY",
+            "tag": "Proxies",
             "type": "selector",
             "outbounds": []
         },
         {
-            "tag": "RELAY",
+            "tag": "Relay",
             "type": "selector",
             "outbounds": []
         },
         {
-            "tag": "EMBY",
+            "tag": "Emby",
             "type": "selector",
             "outbounds": []
         },
         {
-            "tag": "AIGC",
+            "tag": "Netflix",
             "type": "selector",
             "outbounds": []
         },
         {
-            "tag": "FINAL",
+            "tag": "Bilibili",
             "type": "selector",
             "outbounds": []
         },
         {
-            "tag": "GLOBAL",
+            "tag": "Youtube",
+            "type": "selector",
+            "outbounds": []
+        },
+        {
+            "tag": "Telegram",
+            "type": "selector",
+            "outbounds": []
+        },
+        {
+            "tag": "Google",
+            "type": "selector",
+            "outbounds": []
+        },
+        {
+            "tag": "Microsoft",
+            "type": "selector",
+            "outbounds": []
+        },
+        {
+            "tag": "OpenAI",
+            "type": "selector",
+            "outbounds": []
+        },
+        {
+            "tag": "Apple",
+            "type": "selector",
+            "outbounds": []
+        },
+        {
+            "tag": "Final",
+            "type": "selector",
+            "outbounds": []
+        },
+        {
+            "tag": "Global",
             "type": "selector",
             "outbounds": []
         },
@@ -225,7 +260,7 @@
             "outbounds": []
         },
         {
-            "tag": "AUTO",
+            "tag": "Auto",
             "type": "urltest",
             "outbounds": [],
             "url": "http://cp.cloudflare.com/generate_204",
@@ -233,7 +268,7 @@
             "tolerance": 100
         },
         {
-            "tag": "TESTING",
+            "tag": "Testing",
             "type": "urltest",
             "outbounds": [
                 "DIRECT"
@@ -243,91 +278,49 @@
             "tolerance": 100
         },
         {
-            "tag": "S-HK",
-            "type": "selector",
-            "outbounds": []
-        },
-        {
-            "tag": "S-TW",
-            "type": "selector",
-            "outbounds": []
-        },
-        {
-            "tag": "S-JP",
-            "type": "selector",
-            "outbounds": []
-        },
-        {
-            "tag": "S-SG",
-            "type": "selector",
-            "outbounds": []
-        },
-        {
-            "tag": "S-US",
-            "type": "selector",
-            "outbounds": []
-        },
-        {
-            "tag": "S-RD",
-            "type": "selector",
-            "outbounds": []
-        },
-        {
-            "tag": "A-HK",
+            "tag": "AUTO-HK",
             "type": "urltest",
-            "outbounds": [
-                "S-HK"
-            ],
+            "outbounds": [],
             "url": "http://cp.cloudflare.com/generate_204",
             "interval": "3m",
             "tolerance": 100
         },
         {
-            "tag": "A-TW",
+            "tag": "AUTO-TW",
             "type": "urltest",
-            "outbounds": [
-                "S-TW"
-            ],
+            "outbounds": [],
             "url": "http://cp.cloudflare.com/generate_204",
             "interval": "3m",
             "tolerance": 100
         },
         {
-            "tag": "A-JP",
+            "tag": "AUTO-JP",
             "type": "urltest",
-            "outbounds": [
-                "S-JP"
-            ],
+            "outbounds": [],
             "url": "http://cp.cloudflare.com/generate_204",
             "interval": "3m",
             "tolerance": 100
         },
         {
-            "tag": "A-SG",
+            "tag": "AUTO-SG",
             "type": "urltest",
-            "outbounds": [
-                "S-SG"
-            ],
+            "outbounds": [],
             "url": "http://cp.cloudflare.com/generate_204",
             "interval": "3m",
             "tolerance": 100
         },
         {
-            "tag": "A-US",
+            "tag": "AUTO-US",
             "type": "urltest",
-            "outbounds": [
-                "S-US"
-            ],
+            "outbounds": [],
             "url": "http://cp.cloudflare.com/generate_204",
             "interval": "3m",
             "tolerance": 100
         },
         {
-            "tag": "A-RD",
+            "tag": "AUTO-RD",
             "type": "urltest",
-            "outbounds": [
-                "S-RD"
-            ],
+            "outbounds": [],
             "url": "http://cp.cloudflare.com/generate_204",
             "interval": "3m",
             "tolerance": 100
@@ -382,11 +375,11 @@
             },
             {
                 "rule_set": "rule-proxy-self",
-                "outbound": "PROXY"
+                "outbound": "Proxies"
             },
             {
                 "rule_set": "rule-emby-self",
-                "outbound": "EMBY"
+                "outbound": "Emby"
             },
             {
                 "rule_set": "rule-direct-self",
@@ -394,65 +387,65 @@
             },
             {
                 "rule_set": "rule-ai",
-                "outbound": "AIGC"
+                "outbound": "OpenAI"
             },
             {
                 "rule_set": "rule-youtube",
-                "outbound": "PROXY"
+                "outbound": "Youtube"
             },
             {
                 "rule_set": "rule-google",
-                "outbound": "PROXY"
+                "outbound": "Google"
             },
             {
                 "rule_set": "rule-github",
-                "outbound": "PROXY"
+                "outbound": "Proxies"
             },
             {
                 "rule_set": [
                     "rule-telegram",
                     "rule-ip-telegram"
                 ],
-                "outbound": "PROXY"
+                "outbound": "Telegram"
             },
             {
                 "rule_set": "rule-x",
-                "outbound": "PROXY"
+                "outbound": "Proxies"
             },
             {
                 "rule_set": "rule-facebook",
-                "outbound": "PROXY"
+                "outbound": "Proxies"
             },
             {
                 "rule_set": "rule-twitch",
-                "outbound": "PROXY"
+                "outbound": "Proxies"
             },
             {
                 "rule_set": "rule-tiktok",
-                "outbound": "PROXY"
+                "outbound": "Proxies"
             },
             {
                 "rule_set": [
                     "rule-netflix",
                     "rule-ip-netflix"
                 ],
-                "outbound": "PROXY"
+                "outbound": "Netflix"
             },
             {
                 "rule_set": "rule-bilibili",
-                "outbound": "DIRECT"
+                "outbound": "Bilibili"
             },
             {
                 "rule_set": "rule-apple",
-                "outbound": "DIRECT"
+                "outbound": "Apple"
             },
             {
                 "rule_set": "rule-microsoft",
-                "outbound": "DIRECT"
+                "outbound": "Microsoft"
             },
             {
                 "rule_set": "rule-proxy",
-                "outbound": "PROXY"
+                "outbound": "Proxies"
             },
             {
                 "rule_set": [
@@ -602,7 +595,7 @@
                 "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/cnip.srs"
             }
         ],
-        "final": "FINAL",
+        "final": "Final",
         "auto_detect_interface": true,
         "default_domain_resolver": {
             "server": "dns-bootstrap",

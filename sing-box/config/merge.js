@@ -18,16 +18,8 @@ let proxies = await produceArtifact({
 // 加入所有节点
 config.outbounds.push(...proxies)
 
-const relay_tag = "RELAY"
-
-const self_tags = {
-    HK: ['S-HK', 'A-HK'],
-    TW: ['S-TW', 'A-TW'],
-    JP: ['S-JP', 'A-JP'],
-    SG: ['S-SG', 'A-SG'],
-    US: ['S-US', 'A-US'],
-    RD: ['S-RD', 'A-RD']
-}
+let allProxiesTags = [];
+allProxiesTags.push(...proxies.map(p => p.tag))
 
 
 // ===== 分组 =====
@@ -38,8 +30,7 @@ const groups = {
     SG: [],
     US: [],
     RD: [],
-    LD: [],
-    ALL: []
+    LD: []
 }
 
 // ===== 规则（建议顺序：更“唯一”的优先）=====
@@ -56,8 +47,13 @@ const rules = {
 for (const p of proxies) {
     const tag = p.tag || ''
 
+
+
+
     if (rules.LD.test(tag)) {
-        p.detour = relay_tag
+        if (!(/(V6)/i.test(tag))) {
+            p.detour = "Relay"
+        }
         groups.LD.push(tag)
     } else if (rules.HK.test(tag)) {
         groups.HK.push(tag)
@@ -73,8 +69,6 @@ for (const p of proxies) {
         // 👇 只有没命中任何地区才会进 RD
         groups.RD.push(tag)
     }
-    // 👇 所有节点都归入 ALL
-    groups.ALL.push(tag)
 }
 
 // ===== 写入 =====
@@ -82,89 +76,68 @@ config.outbounds.forEach(i => {
 
     if (i.outbounds) {
 
-        if (i.tag === "S-HK" || i.tag === "A-HK") {
+        if (i.tag === "AUTO-HK") {
             i.outbounds.push(...groups.HK)
-        } else if (i.tag === "S-TW" || i.tag === "A-TW") {
+        } else if (i.tag === "AUTO-TW") {
             i.outbounds.push(...groups.TW)
-        } else if (i.tag === "S-JP" || i.tag === "A-JP") {
+        } else if (i.tag === "AUTO-JP") {
             i.outbounds.push(...groups.JP)
-        } else if (i.tag === "S-SG" || i.tag === "A-SG") {
+        } else if (i.tag === "AUTO-SG") {
             i.outbounds.push(...groups.SG)
-        } else if (i.tag === "S-US" || i.tag === "A-US") {
+        } else if (i.tag === "AUTO-US") {
             i.outbounds.push(...groups.US)
-        } else if (i.tag === "S-RD" || i.tag === "A-RD") {
+        } else if (i.tag === "AUTO-RD") {
             i.outbounds.push(...groups.RD)
-        } else if (i.tag === relay_tag) {
+        } else if (i.tag === "Relay") {
+            // 中转节点
             i.outbounds.push(
-                ...self_tags.HK,
-                ...self_tags.TW,
-                ...self_tags.JP,
-                ...self_tags.SG,
-                ...self_tags.US,
-                ...self_tags.RD
+                "AUTO-HK",
+                "AUTO-TW",
+                "AUTO-JP",
+                "AUTO-SG",
+                "AUTO-US",
+                "AUTO-RD",
+                ...allProxiesTags.filter(tag => !groups.LD.includes(tag))
             )
             i.outbounds.sort((a, b) => a.localeCompare(b))
-            i.default = "A-SG"
-        } else if (i.tag === "PROXY") {
-            i.outbounds.push(
-                ...self_tags.HK,
-                ...self_tags.TW,
-                ...self_tags.JP,
-                ...self_tags.SG,
-                ...self_tags.US,
-                ...self_tags.RD,
-                ...groups.LD
-            )
+            i.default = "AUTO-SG"
+        } else if (i.tag === "Proxies") {
+            i.outbounds.push(...allProxiesTags)
             i.outbounds.sort((a, b) => a.localeCompare(b))
-            i.default = "A-SG"
-        } else if (i.tag === "AUTO-TESTING") {
+        } else if (i.tag === "Testing") {
             i.outbounds.push(
                 ...groups.LD
             )
             i.outbounds.sort((a, b) => a.localeCompare(b))
-        } else if (i.tag === "DNS") {
+        } else if (i.tag === "DNSOUT") {
             i.outbounds.push(
-                "PROXY",
-                ...self_tags.HK,
-                ...self_tags.TW,
-                ...self_tags.JP,
-                ...self_tags.SG,
-                ...self_tags.US,
-                ...self_tags.RD,
-                ...groups.LD
+                "Proxies",
+                "AUTO-HK",
+                "AUTO-TW",
+                "AUTO-JP",
+                "AUTO-SG",
+                "AUTO-US",
+                "AUTO-RD",
             )
             i.outbounds.sort((a, b) => a.localeCompare(b))
-            i.default = "PROXY"
-        } else if (i.tag === "AUTO-SELECT") {
-            i.outbounds.push(
-                self_tags.HK[1],
-                self_tags.TW[1],
-                self_tags.SG[1],
-                self_tags.JP[1],
-                self_tags.US[1],
-                self_tags.RD[1]
-            )
+            i.default = "AUTO-SG"
+        } else if (i.tag === "Auto") {
+            i.outbounds.push(...allProxiesTags)
             i.outbounds.sort((a, b) => a.localeCompare(b))
-        } else if (i.tag === "EMBY") {
+        } else if (i.tag === "Bilibili" || i.tag === "Apple" || i.tag === "Microsoft") {
             i.outbounds.push(
-                "PROXY",
+                "Proxies",
                 "DIRECT",
-                ...self_tags.HK,
-                ...self_tags.TW,
-                ...self_tags.JP,
-                ...self_tags.SG,
-                ...self_tags.US,
-                ...self_tags.RD,
-                ...groups.LD
+                ...allProxiesTags
             )
-           i.outbounds.sort((a, b) => a.localeCompare(b))
-           i.default = "PROXY"
+            i.default = "DIRECT"
         } else {
             i.outbounds.push(
-                "PROXY",
-                "DIRECT"
+                "Proxies",
+                "DIRECT",
+                ...allProxiesTags
             )
-            i.default = "PROXY"
+            i.default = "Proxies"
         }
     }
 
