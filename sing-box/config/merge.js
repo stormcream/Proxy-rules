@@ -97,9 +97,8 @@ config.outbounds.forEach(i => {
                 "AUTO-SG",
                 "AUTO-US",
                 "AUTO-RD",
-                ...allProxiesTags.filter(tag => !groups.LD.includes(tag))
+                ...allProxiesTags.filter(tag => !groups.LD.includes(tag)).sort((a, b) => a.localeCompare(b))
             )
-            i.outbounds.sort((a, b) => a.localeCompare(b))
             i.default = "AUTO-SG"
         } else if (i.tag === "Proxies") {
             i.outbounds.push(...allProxiesTags)
@@ -109,7 +108,7 @@ config.outbounds.forEach(i => {
                 ...groups.LD
             )
             i.outbounds.sort((a, b) => a.localeCompare(b))
-        } else if (i.tag === "DNSOUT") {
+        } else if (i.tag === "DNS") {
             i.outbounds.push(
                 "Proxies",
                 "AUTO-HK",
@@ -127,14 +126,14 @@ config.outbounds.forEach(i => {
         } else if (i.tag === "Bilibili" || i.tag === "Apple" || i.tag === "Microsoft") {
             i.outbounds.push(
                 "Proxies",
-                "DIRECT",
+                "Direct",
                 ...allProxiesTags
             )
-            i.default = "DIRECT"
+            i.default = "Direct"
         } else {
             i.outbounds.push(
                 "Proxies",
-                "DIRECT",
+                "Direct",
                 ...allProxiesTags
             )
             i.default = "Proxies"

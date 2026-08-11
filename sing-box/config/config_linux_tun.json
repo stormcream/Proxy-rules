@@ -33,7 +33,7 @@
                 "type": "https",
                 "server": "dns.google",
                 "domain_resolver": "dns-hosts",
-                "detour": "DNSOUT"
+                "detour": "DNS"
             },
             {
                 "tag": "dns-direct",
@@ -205,6 +205,31 @@
             "outbounds": []
         },
         {
+            "tag": "Github",
+            "type": "selector",
+            "outbounds": []
+        },
+        {
+            "tag": "X",
+            "type": "selector",
+            "outbounds": []
+        },
+        {
+            "tag": "Facebook",
+            "type": "selector",
+            "outbounds": []
+        },
+        {
+            "tag": "Twitch",
+            "type": "selector",
+            "outbounds": []
+        },
+        {
+            "tag": "Tiktok",
+            "type": "selector",
+            "outbounds": []
+        },
+        {
             "tag": "Netflix",
             "type": "selector",
             "outbounds": []
@@ -255,7 +280,7 @@
             "outbounds": []
         },
         {
-            "tag": "DNSOUT",
+            "tag": "DNS",
             "type": "selector",
             "outbounds": []
         },
@@ -271,7 +296,7 @@
             "tag": "Testing",
             "type": "urltest",
             "outbounds": [
-                "DIRECT"
+                "Direct"
             ],
             "url": "http://cp.cloudflare.com/generate_204",
             "interval": "3m",
@@ -326,11 +351,11 @@
             "tolerance": 100
         },
         {
-            "tag": "DIRECT",
+            "tag": "Direct",
             "type": "direct"
         },
         {
-            "tag": "BLOCK",
+            "tag": "Block",
             "type": "block"
         }
     ],
@@ -341,7 +366,7 @@
             },
             {
                 "ip_is_private": true,
-                "outbound": "DIRECT"
+                "outbound": "Direct"
             },
             {
                 "type": "logical",
@@ -363,11 +388,11 @@
             },
             {
                 "clash_mode": "direct",
-                "outbound": "DIRECT"
+                "outbound": "Direct"
             },
             {
                 "clash_mode": "global",
-                "outbound": "GLOBAL"
+                "outbound": "Global"
             },
             {
                 "rule_set": "rule-ads",
@@ -383,7 +408,7 @@
             },
             {
                 "rule_set": "rule-direct-self",
-                "outbound": "DIRECT"
+                "outbound": "Direct"
             },
             {
                 "rule_set": "rule-ai",
@@ -399,7 +424,7 @@
             },
             {
                 "rule_set": "rule-github",
-                "outbound": "Proxies"
+                "outbound": "Github"
             },
             {
                 "rule_set": [
@@ -410,19 +435,19 @@
             },
             {
                 "rule_set": "rule-x",
-                "outbound": "Proxies"
+                "outbound": "X"
             },
             {
                 "rule_set": "rule-facebook",
-                "outbound": "Proxies"
+                "outbound": "Facebook"
             },
             {
                 "rule_set": "rule-twitch",
-                "outbound": "Proxies"
+                "outbound": "Twitch"
             },
             {
                 "rule_set": "rule-tiktok",
-                "outbound": "Proxies"
+                "outbound": "Tiktok"
             },
             {
                 "rule_set": [
@@ -452,7 +477,7 @@
                     "rule-direct",
                     "rule-ip-cn"
                 ],
-                "outbound": "DIRECT"
+                "outbound": "Direct"
             }
         ],
         "rule_set": [
