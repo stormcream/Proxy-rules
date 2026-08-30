@@ -8,7 +8,8 @@
       "domain_suffix": [
           "tampermonkey.net.cn",
           "vanse.top",
-          "andnode.com"
+          "andnode.com",
+          "linux.sb"
       ],
       "domain_regex": []
     }
