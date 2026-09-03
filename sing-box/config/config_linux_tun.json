@@ -1,5 +1,4 @@
 {
-    "$schema": "https://sing-box.sagernet.org/schema.json",
     "log": {
         "level": "info",
         "timestamp": true
@@ -13,10 +12,6 @@
                     "dns.google": [
                         "8.8.8.8",
                         "8.8.4.4"
-                    ],
-                    "cloudflare-dns.com": [
-                        "1.1.1.1",
-                        "1.0.0.1"
                     ],
                     "dns.alidns.com": [
                         "223.5.5.5",
@@ -37,7 +32,7 @@
             },
             {
                 "tag": "dns-direct",
-                "type": "https",
+                "type": "h3",
                 "server": "dns.alidns.com",
                 "domain_resolver": "dns-hosts"
             },
@@ -50,17 +45,13 @@
         ],
         "rules": [
             {
-                "preferred_by": "dns-hosts",
-                "action": "route",
-                "server": "dns-hosts"
-            },
-            {
                 "query_type": [
                     "SVCB",
                     "HTTPS",
                     "PTR"
                 ],
-                "action": "reject"
+                "action": "predefined",
+                "rcode": "NOERROR"
             },
             {
                 "clash_mode": "direct",
@@ -118,22 +109,21 @@
             {
                 "rule_set": "rule-direct",
                 "server": "dns-direct"
+            },
+            {
+                "action": "evaluate",
+                "server": "dns-proxy",
+                "client_subnet": "114.114.114.114/24"
+            },
+            {
+                "match_response": true,
+                "rule_set": "rule-ip-cn",
+                "server": "dns-direct"
             }
         ],
         "final": "dns-proxy",
         "cache_capacity": 4096,
-        "strategy": "ipv4_only",
-        "optimistic": {
-            "enabled": true,
-            "timeout": "12h"
-        }
-    },
-    "ntp": {
-        "enabled": true,
-        "server": "time.apple.com",
-        "server_port": 123,
-        "interval": "30m",
-        "domain_resolver": "dns-bootstrap"
+        "strategy": "ipv4_only"
     },
     "http_clients": [
         {
@@ -185,7 +175,7 @@
             "auto_route": true,
             "auto_redirect": true,
             "strict_route": true,
-            "stack": "gvisor"
+            "stack": "mixed"
         }
     ],
     "outbounds": [
@@ -288,7 +278,7 @@
             "tag": "Auto",
             "type": "urltest",
             "outbounds": [],
-            "url": "http://cp.cloudflare.com/generate_204",
+            "url": "http://captive.apple.com/generate_204",
             "interval": "3m",
             "tolerance": 100
         },
@@ -298,7 +288,7 @@
             "outbounds": [
                 "Direct"
             ],
-            "url": "http://cp.cloudflare.com/generate_204",
+            "url": "http://captive.apple.com/generate_204",
             "interval": "3m",
             "tolerance": 100
         },
@@ -306,7 +296,7 @@
             "tag": "AUTO-HK",
             "type": "urltest",
             "outbounds": [],
-            "url": "http://cp.cloudflare.com/generate_204",
+            "url": "http://captive.apple.com/generate_204",
             "interval": "3m",
             "tolerance": 100
         },
@@ -314,7 +304,7 @@
             "tag": "AUTO-TW",
             "type": "urltest",
             "outbounds": [],
-            "url": "http://cp.cloudflare.com/generate_204",
+            "url": "http://captive.apple.com/generate_204",
             "interval": "3m",
             "tolerance": 100
         },
@@ -322,7 +312,7 @@
             "tag": "AUTO-JP",
             "type": "urltest",
             "outbounds": [],
-            "url": "http://cp.cloudflare.com/generate_204",
+            "url": "http://captive.apple.com/generate_204",
             "interval": "3m",
             "tolerance": 100
         },
@@ -330,7 +320,7 @@
             "tag": "AUTO-SG",
             "type": "urltest",
             "outbounds": [],
-            "url": "http://cp.cloudflare.com/generate_204",
+            "url": "http://captive.apple.com/generate_204",
             "interval": "3m",
             "tolerance": 100
         },
@@ -338,7 +328,7 @@
             "tag": "AUTO-US",
             "type": "urltest",
             "outbounds": [],
-            "url": "http://cp.cloudflare.com/generate_204",
+            "url": "http://captive.apple.com/generate_204",
             "interval": "3m",
             "tolerance": 100
         },
@@ -346,7 +336,7 @@
             "tag": "AUTO-RD",
             "type": "urltest",
             "outbounds": [],
-            "url": "http://cp.cloudflare.com/generate_204",
+            "url": "http://captive.apple.com/generate_204",
             "interval": "3m",
             "tolerance": 100
         },
@@ -395,6 +385,10 @@
                 "outbound": "Global"
             },
             {
+                "rule_set": "rule-blockHttpDNS",
+                "action": "reject"
+            },
+            {
                 "rule_set": "rule-ads",
                 "action": "reject"
             },
@@ -427,10 +421,7 @@
                 "outbound": "Github"
             },
             {
-                "rule_set": [
-                    "rule-telegram",
-                    "rule-ip-telegram"
-                ],
+                "rule_set": "rule-telegram",
                 "outbound": "Telegram"
             },
             {
@@ -450,10 +441,7 @@
                 "outbound": "Tiktok"
             },
             {
-                "rule_set": [
-                    "rule-netflix",
-                    "rule-ip-netflix"
-                ],
+                "rule_set": "rule-netflix",
                 "outbound": "Netflix"
             },
             {
@@ -473,10 +461,19 @@
                 "outbound": "Proxies"
             },
             {
-                "rule_set": [
-                    "rule-direct",
-                    "rule-ip-cn"
-                ],
+                "rule_set": "rule-direct",
+                "outbound": "Direct"
+            },
+            {
+                "rule_set": "rule-ip-telegram",
+                "outbound": "Telegram"
+            },
+            {
+                "rule_set": "rule-ip-netflix",
+                "outbound": "Netflix"
+            },
+            {
+                "rule_set": "rule-ip-cn",
                 "outbound": "Direct"
             }
         ],
