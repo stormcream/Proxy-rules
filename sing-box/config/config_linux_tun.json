@@ -30,6 +30,13 @@
             {
                 "tag": "dns-proxy",
                 "type": "https",
+                "server": "cloudflare-dns.com",
+                "domain_resolver": "dns-hosts",
+                "detour": "DNS"
+            },
+            {
+                "tag": "dns-prefetch",
+                "type": "https",
                 "server": "dns.google",
                 "domain_resolver": "dns-hosts",
                 "detour": "DNS"
@@ -66,8 +73,7 @@
             },
             {
                 "rule_set": "rule-ads",
-                "action": "predefined",
-                "rcode": "NOERROR"
+                "action": "reject"
             },
             {
                 "rule_set": [
@@ -113,18 +119,23 @@
             },
             {
                 "action": "evaluate",
-                "server": "dns-proxy",
-                "client_subnet": "221.179.155.161"
+                "tag": "prefetch",
+                "server": "dns-prefetch",
+                "client_subnet": "221.179.155.161/24"
             },
             {
-                "match_response": true,
+                "match_response": "prefetch",
                 "rule_set": "rule-ip-cn",
                 "server": "dns-direct"
             }
         ],
         "final": "dns-proxy",
         "cache_capacity": 4096,
-        "strategy": "ipv4_only"
+        "strategy": "ipv4_only",
+        "optimistic": {
+            "enabled": true,
+            "timeout": "1d"
+        }
     },
     "http_clients": [
         {
@@ -174,9 +185,7 @@
                 "fdfe:dcba:9876::1/126"
             ],
             "auto_route": true,
-            "auto_redirect": true,
-            "strict_route": true,
-            "stack": "mixed"
+            "auto_redirect": true
         }
     ],
     "outbounds": [
@@ -356,6 +365,19 @@
                 "action": "sniff"
             },
             {
+                "type": "logical",
+                "mode": "or",
+                "rules": [
+                    {
+                        "protocol": "dns"
+                    },
+                    {
+                        "port": 53
+                    }
+                ],
+                "action": "hijack-dns"
+            },
+            {
                 "ip_is_private": true,
                 "outbound": "Direct"
             },
@@ -503,7 +525,7 @@
                 "tag": "rule-ai",
                 "type": "remote",
                 "format": "binary",
-                "url": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing/geo/geosite/category-ai-!cn.srs"
+                "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/ai.srs"
             },
             {
                 "tag": "rule-youtube",
@@ -569,25 +591,25 @@
                 "tag": "rule-apple",
                 "type": "remote",
                 "format": "binary",
-                "url": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing/geo/geosite/apple.srs"
+                "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/apple-cn.srs"
             },
             {
                 "tag": "rule-microsoft",
                 "type": "remote",
                 "format": "binary",
-                "url": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing/geo/geosite/microsoft.srs"
+                "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/microsoft-cn.srs"
             },
             {
                 "tag": "rule-proxy",
                 "type": "remote",
                 "format": "binary",
-                "url": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing/geo/geosite/geolocation-!cn.srs"
+                "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/proxy.srs"
             },
             {
                 "tag": "rule-direct",
                 "type": "remote",
                 "format": "binary",
-                "url": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing/geo/geosite/cn.srs"
+                "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/cn-lite.srs"
             },
             {
                 "tag": "rule-ip-telegram",
@@ -605,7 +627,7 @@
                 "tag": "rule-ip-cn",
                 "type": "remote",
                 "format": "binary",
-                "url": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing/geo/geoip/cn.srs"
+                "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/cnip.srs"
             }
         ],
         "final": "Final",

@@ -1,6 +1,6 @@
 # 自用sing-box配置与规则
 
-sing-box >= 1.14.0-beta.9  
+sing-box >= 1.14+  
 开启 OpenWRT momo 仅内核模式  
 关闭 OpenWRT LAN 接口 IPV6 保留 wan 口 IPV6  
 关闭 OpenWRT DNS 重定向  
