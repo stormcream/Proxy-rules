@@ -65,10 +65,12 @@
             },
             {
                 "clash_mode": "direct",
+                "action": "route",
                 "server": "dns-direct"
             },
             {
                 "clash_mode": "global",
+                "action": "route",
                 "server": "dns-proxy"
             },
             {
@@ -77,13 +79,15 @@
             },
             {
                 "rule_set": [
-                    "rule-emby-self",
-                    "rule-proxy-self"
+                    "rule-emby-private",
+                    "rule-proxy-private"
                 ],
+                "action": "route",
                 "server": "dns-proxy"
             },
             {
-                "rule_set": "rule-direct-self",
+                "rule_set": "rule-direct-private",
+                "action": "route",
                 "server": "dns-direct"
             },
             {
@@ -99,6 +103,7 @@
                     "rule-tiktok",
                     "rule-netflix"
                 ],
+                "action": "route",
                 "server": "dns-proxy"
             },
             {
@@ -107,14 +112,17 @@
                     "rule-apple",
                     "rule-microsoft"
                 ],
+                "action": "route",
                 "server": "dns-direct"
             },
             {
                 "rule_set": "rule-proxy",
+                "action": "route",
                 "server": "dns-proxy"
             },
             {
                 "rule_set": "rule-direct",
+                "action": "route",
                 "server": "dns-direct"
             },
             {
@@ -126,7 +134,12 @@
             {
                 "match_response": "prefetch",
                 "rule_set": "rule-ip-cn",
+                "action": "route",
                 "server": "dns-direct"
+            },
+            {
+                "action": "route",
+                "server": "dns-proxy"
             }
         ],
         "final": "dns-proxy",
@@ -185,7 +198,9 @@
                 "fdfe:dcba:9876::1/126"
             ],
             "auto_route": true,
-            "auto_redirect": true
+            "auto_redirect": true,
+            "strict_route": true,
+            "stack": "mixed"
         }
     ],
     "outbounds": [
@@ -431,15 +446,15 @@
                 "action": "reject"
             },
             {
-                "rule_set": "rule-proxy-self",
+                "rule_set": "rule-proxy-private",
                 "outbound": "Proxies"
             },
             {
-                "rule_set": "rule-emby-self",
+                "rule_set": "rule-emby-private",
                 "outbound": "Emby"
             },
             {
-                "rule_set": "rule-direct-self",
+                "rule_set": "rule-direct-private",
                 "outbound": "Direct"
             },
             {
@@ -523,19 +538,19 @@
                 "url": "https://gcore.jsdelivr.net/gh/217heidai/adblockfilters@main/rules/adblocksingbox.srs"
             },
             {
-                "tag": "rule-emby-self",
+                "tag": "rule-emby-private",
                 "type": "remote",
                 "format": "source",
                 "url": "https://raw.githubusercontent.com/stormcream/Proxy-rules/main/sing-box/emby.json"
             },
             {
-                "tag": "rule-proxy-self",
+                "tag": "rule-proxy-private",
                 "type": "remote",
                 "format": "source",
                 "url": "https://raw.githubusercontent.com/stormcream/Proxy-rules/main/sing-box/proxy.json"
             },
             {
-                "tag": "rule-direct-self",
+                "tag": "rule-direct-private",
                 "type": "remote",
                 "format": "source",
                 "url": "https://raw.githubusercontent.com/stormcream/Proxy-rules/main/sing-box/direct.json"
@@ -628,7 +643,7 @@
                 "tag": "rule-direct",
                 "type": "remote",
                 "format": "binary",
-                "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/cn-lite.srs"
+                "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/cn.srs"
             },
             {
                 "tag": "rule-ip-telegram",
