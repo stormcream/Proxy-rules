@@ -1,0 +1,32 @@
+{
+    "version": 3,
+    "rules": [
+        {
+            "ip_cidr": [],
+            "domain": [
+                "dm.wo.com.cn",
+                "a.fxltsbl.com",
+                "b.fxltsbl.com",
+                "auc.fxltsbl.com",
+                "zzhc.vnet.cn",
+                "vmd.vivo.com.cn",
+                "vcodevisual.vivo.xyz",
+                "stnetsdk.appstore.vivo.com.cn",
+                "monitor-stsdk.vivo.com.cn",
+                "tracking.miui.com",
+                "data.mistat.xiaomi.com",
+                "storeconfig.mistat.xiaomi.com",
+                "tracking.intl.miui.com",
+                "metrics1.data.hicloud.com",
+                "metrics2.data.hicloud.com",
+                "logservice.hicloud.com",
+                "logservice1.hicloud.com",
+                "diagmon-serviceapi.samsungdm.com",
+                "dc.di.atlas.samsung.com"
+            ],
+            "domain_keyword": [],
+            "domain_suffix": [],
+            "domain_regex": []
+        }
+    ]
+}
