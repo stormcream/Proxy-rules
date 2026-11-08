@@ -1,10 +1,15 @@
 {
+    "$schema": "https://sing-box.sagernet.org/schema.json",
     "log": {
         "level": "info",
         "timestamp": true
     },
     "dns": {
         "servers": [
+            {
+                "tag": "dns-local",
+                "type": "local"
+            },
             {
                 "tag": "dns-hosts",
                 "type": "hosts",
@@ -24,13 +29,17 @@
                     "doh.pub": [
                         "120.53.53.53",
                         "1.12.12.12"
+                    ],
+                    "dns.quad9.net": [
+                        "9.9.9.9",
+                        "149.112.112.112"
                     ]
                 }
             },
             {
                 "tag": "dns-proxy",
                 "type": "https",
-                "server": "cloudflare-dns.com",
+                "server": "dns.quad9.net",
                 "domain_resolver": "dns-hosts",
                 "detour": "DNS"
             },
@@ -56,11 +65,23 @@
         ],
         "rules": [
             {
+                "rule_set": "rule-private",
+                "action": "route",
+                "server": "dns-local"
+            },
+            {
                 "query_type": [
                     "SVCB",
-                    "HTTPS",
-                    "PTR"
+                    "HTTPS"
                 ],
+                "action": "reject"
+            },
+            {
+                "rule_set": "rule-block-private",
+                "action": "reject"
+            },
+            {
+                "rule_set": "rule-ads",
                 "action": "reject"
             },
             {
@@ -72,10 +93,6 @@
                 "clash_mode": "global",
                 "action": "route",
                 "server": "dns-proxy"
-            },
-            {
-                "rule_set": "rule-ads",
-                "action": "reject"
             },
             {
                 "rule_set": [
@@ -143,7 +160,7 @@
             }
         ],
         "final": "dns-proxy",
-        "cache_capacity": 4096,
+        "cache_capacity": 8192,
         "strategy": "ipv4_only",
         "optimistic": {
             "enabled": true,
@@ -199,8 +216,7 @@
             ],
             "auto_route": true,
             "auto_redirect": true,
-            "strict_route": true,
-            "stack": "mixed"
+            "strict_route": true
         }
     ],
     "outbounds": [
@@ -385,20 +401,7 @@
                 "action": "sniff"
             },
             {
-                "type": "logical",
-                "mode": "or",
-                "rules": [
-                    {
-                        "protocol": "dns"
-                    },
-                    {
-                        "port": 53
-                    }
-                ],
-                "action": "hijack-dns"
-            },
-            {
-                "ip_is_private": true,
+                "rule_set": "rule-private",
                 "outbound": "Direct"
             },
             {
@@ -434,16 +437,20 @@
                 "outbound": "SSH"
             },
             {
+                "rule_set": "rule-block-private",
+                "action": "reject"
+            },
+            {
+                "rule_set": "rule-ads",
+                "action": "reject"
+            },
+            {
                 "clash_mode": "direct",
                 "outbound": "Direct"
             },
             {
                 "clash_mode": "global",
                 "outbound": "Global"
-            },
-            {
-                "rule_set": "rule-ads",
-                "action": "reject"
             },
             {
                 "rule_set": "rule-proxy-private",
@@ -535,133 +542,169 @@
                 "type": "remote",
                 "tag": "rule-ads",
                 "format": "binary",
-                "url": "https://gcore.jsdelivr.net/gh/217heidai/adblockfilters@main/rules/adblocksingbox.srs"
+                "url": "https://gcore.jsdelivr.net/gh/217heidai/adblockfilters@main/rules/adblocksingbox.srs",
+                "update_interval": "6h"
+            },
+            {
+                "tag": "rule-block-private",
+                "type": "remote",
+                "format": "source",
+                "url": "https://raw.githubusercontent.com/stormcream/Proxy-rules/main/sing-box/block.json",
+                "update_interval": "6h"
             },
             {
                 "tag": "rule-emby-private",
                 "type": "remote",
                 "format": "source",
-                "url": "https://raw.githubusercontent.com/stormcream/Proxy-rules/main/sing-box/emby.json"
+                "url": "https://raw.githubusercontent.com/stormcream/Proxy-rules/main/sing-box/emby.json",
+                "update_interval": "6h"
             },
             {
                 "tag": "rule-proxy-private",
                 "type": "remote",
                 "format": "source",
-                "url": "https://raw.githubusercontent.com/stormcream/Proxy-rules/main/sing-box/proxy.json"
+                "url": "https://raw.githubusercontent.com/stormcream/Proxy-rules/main/sing-box/proxy.json",
+                "update_interval": "6h"
             },
             {
                 "tag": "rule-direct-private",
                 "type": "remote",
                 "format": "source",
-                "url": "https://raw.githubusercontent.com/stormcream/Proxy-rules/main/sing-box/direct.json"
+                "url": "https://raw.githubusercontent.com/stormcream/Proxy-rules/main/sing-box/direct.json",
+                "update_interval": "6h"
+            },
+            {
+                "tag": "rule-private",
+                "type": "remote",
+                "format": "binary",
+                "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/private.srs",
+                "update_interval": "6h"
             },
             {
                 "tag": "rule-ai",
                 "type": "remote",
                 "format": "binary",
-                "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/ai.srs"
+                "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/ai.srs",
+                "update_interval": "6h"
             },
             {
                 "tag": "rule-youtube",
                 "type": "remote",
                 "format": "binary",
-                "url": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing/geo/geosite/youtube.srs"
+                "url": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing/geo/geosite/youtube.srs",
+                "update_interval": "6h"
             },
             {
                 "tag": "rule-google",
                 "type": "remote",
                 "format": "binary",
-                "url": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing/geo/geosite/google.srs"
+                "url": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing/geo/geosite/google.srs",
+                "update_interval": "6h"
             },
             {
                 "tag": "rule-github",
                 "type": "remote",
                 "format": "binary",
-                "url": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing/geo/geosite/github.srs"
+                "url": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing/geo/geosite/github.srs",
+                "update_interval": "6h"
             },
             {
                 "tag": "rule-telegram",
                 "type": "remote",
                 "format": "binary",
-                "url": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing/geo/geosite/telegram.srs"
+                "url": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing/geo/geosite/telegram.srs",
+                "update_interval": "6h"
             },
             {
                 "tag": "rule-x",
                 "type": "remote",
                 "format": "binary",
-                "url": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing/geo/geosite/x.srs"
+                "url": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing/geo/geosite/x.srs",
+                "update_interval": "6h"
             },
             {
                 "tag": "rule-facebook",
                 "type": "remote",
                 "format": "binary",
-                "url": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing/geo/geosite/facebook.srs"
+                "url": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing/geo/geosite/facebook.srs",
+                "update_interval": "6h"
             },
             {
                 "tag": "rule-bilibili",
                 "type": "remote",
                 "format": "binary",
-                "url": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing/geo/geosite/bilibili.srs"
+                "url": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing/geo/geosite/bilibili.srs",
+                "update_interval": "6h"
             },
             {
                 "tag": "rule-twitch",
                 "type": "remote",
                 "format": "binary",
-                "url": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing/geo/geosite/twitch.srs"
+                "url": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing/geo/geosite/twitch.srs",
+                "update_interval": "6h"
             },
             {
                 "tag": "rule-tiktok",
                 "type": "remote",
                 "format": "binary",
-                "url": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing/geo/geosite/tiktok.srs"
+                "url": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing/geo/geosite/tiktok.srs",
+                "update_interval": "6h"
             },
             {
                 "tag": "rule-netflix",
                 "type": "remote",
                 "format": "binary",
-                "url": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing/geo/geosite/netflix.srs"
+                "url": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing/geo/geosite/netflix.srs",
+                "update_interval": "6h"
             },
             {
                 "tag": "rule-apple",
                 "type": "remote",
                 "format": "binary",
-                "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/apple-cn.srs"
+                "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/apple-cn.srs",
+                "update_interval": "6h"
             },
             {
                 "tag": "rule-microsoft",
                 "type": "remote",
                 "format": "binary",
-                "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/microsoft-cn.srs"
+                "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/microsoft-cn.srs",
+                "update_interval": "6h"
             },
             {
                 "tag": "rule-proxy",
                 "type": "remote",
                 "format": "binary",
-                "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/proxy.srs"
+                "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/proxy.srs",
+                "update_interval": "6h"
             },
             {
                 "tag": "rule-direct",
                 "type": "remote",
                 "format": "binary",
-                "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/cn.srs"
+                "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/cn.srs",
+                "update_interval": "6h"
             },
             {
                 "tag": "rule-ip-telegram",
                 "type": "remote",
                 "format": "binary",
-                "url": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing/geo/geoip/telegram.srs"
+                "url": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing/geo/geoip/telegram.srs",
+                "update_interval": "6h"
             },
             {
                 "tag": "rule-ip-netflix",
                 "type": "remote",
                 "format": "binary",
-                "url": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing/geo/geoip/netflix.srs"
+                "url": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing/geo/geoip/netflix.srs",
+                "update_interval": "6h"
             },
             {
                 "tag": "rule-ip-cn",
                 "type": "remote",
                 "format": "binary",
-                "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/cnip.srs"
+                "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/cnip.srs",
+                "update_interval": "6h"
             }
         ],
         "final": "Final",
